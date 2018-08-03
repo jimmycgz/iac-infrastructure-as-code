@@ -31,7 +31,9 @@ for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubunt
 # Ansible Script for Pull Deployment
 ansible gcp_web_prod -a "sudo reboot"
 
-Reboot each instance via ansible playbook to auto deploy by this script. All instances are pre-configured startup script to pull the latest release code from a registry say AWS S3 bucket or ECR. Such startup script can be configured in Linux CLI: crontab –e 
+Reboot each instance via ansible playbook to auto deploy by this script. All instances are pre-configured startup script to pull the latest release code from a registry say AWS S3 bucket or ECR. Such startup script can be configured in Linux CLI: 
+
+crontab –e 
 
 /# Restart the tool server if you meet error like: "error 12: out of memory".
 /# can also try to create a tag file using below ansible command and setup linux to check this file every 10mins, run deployment and delete this file. 
