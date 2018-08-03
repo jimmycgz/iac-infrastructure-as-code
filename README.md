@@ -7,12 +7,16 @@ Repo for all infrastructure related code for build and configuration
 for host in $(cat hosts.txt); do ssh "$host" "sudo reboot"; done
 
 #!/usr/bin/env bash
+
 #Deploy to all pinable Product Web Instance(s) Ubuntu .
+
 #AWS subnet1 and subnet2 10.0.1.x 10.0.2.x
+
 #GCP subnet 
+
 #Azure subnet
 
-# Generate a hosts.txt file collecting all pinable IP in one Prod subnet
+#Generate a hosts.txt file collecting all pinable IP in one Prod subnet
 
 echo "Generating a hosts.txt file collecting all pinable IPs in one Subnet"
 
