@@ -42,7 +42,7 @@ sudo chef-client --local-mode cookbooks/apache/recipes/server.rb
 package 'httpd'
 
 file '/var/www/html/index.html' do
-  content '<h1>Hello, world!</h1>'
+  "content '<h1>Hello, world!</h1>'"
 end
 
 service 'httpd' do
