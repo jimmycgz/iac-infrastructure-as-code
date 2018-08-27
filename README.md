@@ -1,8 +1,15 @@
 # Infrastructure as Code  -My Collections
-Repo for all infrastructure related code for build and configuration
-* For continuous delivery pipeline configuration as code
-* For CICD template code and version control
 
+# Use Terraform to setup API workload infra in AWS:
+Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
+  > create VPC, subnet and Security Group
+  > provision VM using my own AMI for API workload
+  > ...
+# Ansible and Chef
+
+# Linux Script for Configuration Management
+ 
+Details: 
 # Linux Script for Configuration Management
 for host in $(cat hosts.txt); do ssh "$host" "sudo reboot"; done
 
