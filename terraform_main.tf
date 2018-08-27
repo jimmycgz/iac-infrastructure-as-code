@@ -12,7 +12,7 @@ resource "aws_eip" "j_t_eip" {
 
 resource "aws_eip_association" "j_t_eip_asso" {
   instance_id="${aws_instance.j_t_API1.id}"
-  allocation_id ="{aws_eip.j_t_eip.id}"
+  allocation_id ="${aws_eip.j_t_eip.id}"
 }
 
 
