@@ -2,9 +2,14 @@
 
 # Use Terraform to setup API workload infra in AWS:
 Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
+
   > create VPC, subnet and Security Group
+  
   > provision VM using my own AMI for API workload
+  
   > ...
+  
+  
 # Ansible and Chef
 
 # Linux Script for Configuration Management
