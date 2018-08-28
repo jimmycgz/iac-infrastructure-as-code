@@ -15,34 +15,6 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
 # Linux Script for Configuration Management
  
 Details: 
-# Linux Script for Configuration Management
-for host in $(cat hosts.txt); do ssh "$host" "sudo reboot"; done
-
-#!/usr/bin/env bash
-
-#Deploy to all pinable Product Web Instance(s) Ubuntu .
-
-#AWS subnet1 and subnet2 10.0.1.x 10.0.2.x
-
-#GCP subnet 
-
-#Azure subnet
-
-#Generate a hosts.txt file collecting all pinable IP in one Prod subnet
-
-echo "Generating a hosts.txt file collecting all pinable IPs in one Subnet"
-
-seq 254 | xargs -iIP -P255 ping -c1 10.0.1.IP |gawk -F'[ :]' '/time=/{print $4}'  >hosts.txt
-
-seq 254 | xargs -iIP -P255 ping -c1 10.0.2.IP |gawk -F'[ :]' '/time=/{print $4}'  >>hosts.txt
-
-echo "Run Deploy script file in a loop for all pinable instances"
-
-# Push Deployment: Run Deploy script file in a loop
-#Ansible-playbook mybook.yml –syntax-check 
-
-for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
-
 
 # Ansible Script for Pull Deployment
 ansible gcp_web_prod -a "sudo reboot"
@@ -77,3 +49,30 @@ service 'httpd' do
   
 end
 
+# Linux Script for Configuration Management
+for host in $(cat hosts.txt); do ssh "$host" "sudo reboot"; done
+
+#!/usr/bin/env bash
+
+#Deploy to all pinable Product Web Instance(s) Ubuntu .
+
+#AWS subnet1 and subnet2 10.0.1.x 10.0.2.x
+
+#GCP subnet 
+
+#Azure subnet
+
+#Generate a hosts.txt file collecting all pinable IP in one Prod subnet
+
+echo "Generating a hosts.txt file collecting all pinable IPs in one Subnet"
+
+seq 254 | xargs -iIP -P255 ping -c1 10.0.1.IP |gawk -F'[ :]' '/time=/{print $4}'  >hosts.txt
+
+seq 254 | xargs -iIP -P255 ping -c1 10.0.2.IP |gawk -F'[ :]' '/time=/{print $4}'  >>hosts.txt
+
+echo "Run Deploy script file in a loop for all pinable instances"
+
+# Push Deployment: Run Deploy script file in a loop
+#Ansible-playbook mybook.yml –syntax-check 
+
+for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
