@@ -1,6 +1,6 @@
 pipeline {
     /*  Get Terraform resource file by checking out SCM*/
-    /* Create VPC by Terraform resource file */
+    /* Create Security Group by Terraform resource file */
     
     agent any
 
