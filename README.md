@@ -8,7 +8,12 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   
   > provision VM using my own AMI for API workload
   
-  > ...
+  > Run Terraform via Jenkins Pipeline
+  https://github.com/david-wells-1/jenkins-terraform-pipeline
+  
+  > Deploy to Docker by Terraform
+  https://github.com/hashicorp/docker-hub-images/tree/master/terraform
+  
   
   
 # Ansible Script for Pull Deployment
