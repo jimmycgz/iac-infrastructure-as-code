@@ -33,12 +33,6 @@ environment {
                   }
                 }
         
-         stage('destroy') {
-            steps {
-                sh  """
-                    ${TERRAFORM_CMD} destroy -lock=false -input=false tfplan
-                    """
-                  }
-                }
+         
     }
 }
