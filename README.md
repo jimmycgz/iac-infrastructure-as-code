@@ -4,6 +4,7 @@
 Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
 
   > create VPC, subnet and Security Group
+  Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
   
   > provision VM using my own AMI for API workload
   
