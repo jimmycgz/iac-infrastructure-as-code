@@ -1,4 +1,4 @@
-# Infrastructure as Code  -My Collections
+# Infrastructure as Code  -My Collections using Terraform, Ansible, Chef and Linux scripting
 
 # Use Terraform to setup API workload infra in AWS:
 Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
@@ -10,12 +10,6 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   > ...
   
   
-# Ansible and Chef
-
-# Linux Script for Configuration Management
- 
-Details: 
-
 # Ansible Script for Pull Deployment
 ansible gcp_web_prod -a "sudo reboot"
 
