@@ -78,3 +78,24 @@ resource "aws_security_group" "j_t_sg_allow_all" {
   }
 }
 
+resource "aws_route_table" "j_t_public_rt_table" {
+vpc_id="${aws_vpc.j_t_vpc.id}"
+
+route {
+  cidr_block ="0.0.0.0/0"
+  gateway_id="${aws_internet_gateway.j_t_igw.id}"
+}
+
+  tags {  Lable="J_T_RT"}
+
+
+}
+
+
+resource "aws_route_table_association" "j_t_rt_asso" {
+  subnet_id ="${aws_subnet.j_t_subnet1.id}"
+  route_table_id="${aws_route_table.j_t_public_rt_table.id}"
+}
+
+
+
