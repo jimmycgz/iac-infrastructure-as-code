@@ -50,7 +50,7 @@ resource "aws_subnet" "j_t_subnet1" {
 }
 
 resource "aws_instance" "j_t_API1" {
-  ami                    = "ami-01d6d481565727af1"
+  ami                    = "ami-08489108ce5964f68"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
