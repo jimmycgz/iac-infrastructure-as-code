@@ -8,12 +8,15 @@ environment {
         TERRAFORM_CMD = 'terraform'
     }
     stages {
-        stage('checkout repo') {
+    
+          stage('init') {
             steps {
-              checkout scm
+                sh  """
+                    ${TERRAFORM_CMD} init -backend=true -input=false
+                    """
             }
         }
-     
+        
         stage('plan') {
             steps {
                 sh  """
