@@ -29,9 +29,8 @@ environment {
             steps {
                 sh  """
                     ${TERRAFORM_CMD} apply -lock=false -input=false tfplan
-                    cp terraform.tfstate ../$BUILD_NUMBER.tfstate
                    
-                   
+                   cp terraform.tfstate ../$BUILD_NUMBER.tfstate
                     
                     """
                   }
