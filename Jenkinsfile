@@ -30,8 +30,7 @@ environment {
                 sh  """
                     ${TERRAFORM_CMD} apply -lock=false -input=false tfplan
                     git add terraform.tfstate
-                    git -c user.name="Jimmy Cui" -c user.email="jimmycgz@gmail.com" 
-                    git commit -m "terraform state file update from Jenkins"
+                    git -c user.name="Jimmy Cui" -c user.email="jimmycgz@gmail.com" commit -m "terraform state file update from Jenkins"
                     git config --global push.default matching
                     git push
                     
