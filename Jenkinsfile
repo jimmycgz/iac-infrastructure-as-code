@@ -21,7 +21,7 @@ environment {
         stage('plan') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} plan  
+                    ${TERRAFORM_CMD} plan -lock=false  
                     """
                 
                 }
@@ -29,7 +29,7 @@ environment {
         stage('apply') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} apply -auto-approve
+                    ${TERRAFORM_CMD} apply -lock=false -auto-approve
                    
                    cp terraform.tfstate ../$BUILD_NUMBER.tfstate
                     
