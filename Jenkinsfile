@@ -12,7 +12,8 @@ environment {
           stage('init') {
             steps {
                 sh  """
-                    sudo chmod 777 $WORKSPACE
+                    /* sudo chmod 777 $WORKSPACE */
+                    
                     ${TERRAFORM_CMD} init 
                     """
             }
