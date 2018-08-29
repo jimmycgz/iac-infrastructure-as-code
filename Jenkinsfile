@@ -12,9 +12,8 @@ environment {
           stage('init') {
             steps {
                 sh  """
-                    /* sudo chmod 777 $WORKSPACE */
-                    
-                    ${TERRAFORM_CMD} init 
+                                       
+                   sudo ${TERRAFORM_CMD} init 
                     """
             }
         }
@@ -22,7 +21,7 @@ environment {
         stage('plan') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} plan -lock=false  
+                    sudo ${TERRAFORM_CMD} plan -lock=false  
                     """
                 
                 }
@@ -30,7 +29,7 @@ environment {
         stage('apply') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} apply -lock=false -auto-approve
+                    sudo ${TERRAFORM_CMD} apply -lock=false -auto-approve
                    
                    cp terraform.tfstate ../$BUILD_NUMBER.tfstate
                     
