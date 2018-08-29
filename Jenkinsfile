@@ -12,7 +12,7 @@ environment {
           stage('init') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} init -backend=true -input=false
+                    ${TERRAFORM_CMD} init 
                     """
             }
         }
@@ -20,7 +20,7 @@ environment {
         stage('plan') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} plan -out=tfplan -input=false 
+                    ${TERRAFORM_CMD} plan  
                     """
                 
                 }
@@ -28,7 +28,7 @@ environment {
         stage('apply') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} apply -lock=false -input=false tfplan
+                    ${TERRAFORM_CMD} apply 
                    
                    cp terraform.tfstate ../$BUILD_NUMBER.tfstate
                     
