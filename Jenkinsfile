@@ -28,7 +28,7 @@ environment {
         stage('apply') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} apply 
+                    ${TERRAFORM_CMD} apply -auto-approve
                    
                    cp terraform.tfstate ../$BUILD_NUMBER.tfstate
                     
