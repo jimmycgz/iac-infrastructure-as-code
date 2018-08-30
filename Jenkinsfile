@@ -5,7 +5,7 @@ pipeline {
     agent any
 
 environment {
-        TERRAFORM_CMD = 'terraform'
+        TERRAFORM_CMD = 'sudo terraform'
     }
     stages {
     
@@ -13,7 +13,7 @@ environment {
             steps {
                 sh  """
                                        
-                   sudo ${TERRAFORM_CMD} init 
+                   ${TERRAFORM_CMD} init 
                     """
             }
         }
@@ -21,7 +21,7 @@ environment {
         stage('plan') {
             steps {
                 sh  """
-                    sudo ${TERRAFORM_CMD} plan -lock=false  
+                    ${TERRAFORM_CMD} plan -lock=false  
                     """
                 
                 }
@@ -29,10 +29,8 @@ environment {
         stage('apply') {
             steps {
                 sh  """
-                    sudo ${TERRAFORM_CMD} apply -lock=false -auto-approve
-                   
-                   cp terraform.tfstate ../$BUILD_NUMBER.tfstate
-                    
+                    ${TERRAFORM_CMD} apply -lock=false -auto-approve
+                                 
                     """
                   }
                 }
