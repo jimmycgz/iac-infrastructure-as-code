@@ -1,7 +1,7 @@
 provider "aws" {
   version = "~> 1.33"
   shared_credentials_file = "/home/ubuntu/.aws/credentials"
-  profile                 = "Jenkins-aws"
+  profile                 = "default"
   region = "ca-central-1"
 }
  resource "aws_security_group" "jenkins-pipeline-sg" {
