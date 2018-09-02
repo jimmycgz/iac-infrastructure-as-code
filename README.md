@@ -65,6 +65,7 @@ for host in $(cat hosts.txt); do ssh "$host" "sudo reboot"; done
 #Generate a hosts.txt file collecting all pinable IP in one Prod subnet
 
 echo "Generating a hosts.txt file collecting all pinable IPs in one Subnet"
+note: all instances need to open ICMP port to be able to use ping.
 
 seq 254 | xargs -iIP -P255 ping -c1 10.0.1.IP |gawk -F'[ :]' '/time=/{print $4}'  >hosts.txt
 
@@ -72,7 +73,10 @@ seq 254 | xargs -iIP -P255 ping -c1 10.0.2.IP |gawk -F'[ :]' '/time=/{print $4}'
 
 echo "Run Deploy script file in a loop for all pinable instances"
 
+
+# Run Push script in Jenkins
+for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
+
 # Push Deployment: Run Deploy script file in a loop
 #Ansible-playbook mybook.yml –syntax-check 
 
-for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
