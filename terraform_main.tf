@@ -102,7 +102,7 @@ resource "aws_eip" "j_t_eip1" {
   }
 }
 
-resource "aws_eip_association" "j_t_eip_asso" {
+resource "aws_eip_association" "j_t_eip1_asso" {
   instance_id="${aws_instance.j_t_API1.id}"
   allocation_id ="${aws_eip.j_t_eip1.id}"
 }
@@ -120,7 +120,7 @@ resource "aws_instance" "j_t_API2" {
   }
 }
 
-resource "aws_eip" "j_t_eip1" {
+resource "aws_eip" "j_t_eip2" {
   vpc      = true
 
   tags {
@@ -128,7 +128,7 @@ resource "aws_eip" "j_t_eip1" {
   }
 }
 
-resource "aws_eip_association" "j_t_eip_asso" {
+resource "aws_eip_association" "j_t_eip2_asso" {
   instance_id="${aws_instance.j_t_API2.id}"
   allocation_id ="${aws_eip.j_t_eip2.id}"
 }
