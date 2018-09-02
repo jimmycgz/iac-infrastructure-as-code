@@ -10,7 +10,7 @@ environment {
     }
     stages {
     
-          stage('init') {
+          stage('INIT') {
             steps {
                 sh  """
                                        
@@ -19,7 +19,7 @@ environment {
             }
         }
         
-        stage('plan') {
+        stage('PLAN') {
             steps {
                 sh  """
                     ${TERRAFORM_CMD} plan -lock=false  
@@ -28,6 +28,14 @@ environment {
                 }
            }
         
-         
+        stage('APPLY') {
+            steps {
+                sh  """
+                    ${TERRAFORM_CMD} apply -lock=false -auto-approve
+                                 
+                    """
+                  }
+                }
+        
     }
 }
