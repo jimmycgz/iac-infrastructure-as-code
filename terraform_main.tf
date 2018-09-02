@@ -25,6 +25,15 @@ resource "aws_subnet" "j_t_subnet1" {
   }
 }
 
+resource "aws_subnet" "j_t_subnet2" {
+  vpc_id     = "${aws_vpc.j_t_vpc.id}"
+  cidr_block = "172.17.1.0/24"
+
+  tags {
+    Name = "J_T_VPC_Sub2"
+  }
+}
+
 resource "aws_security_group" "j_t_sg_allow_all" {
   name        = "j_t_sg-demo1"
   description = "Test SG in Subnet1: allow all inbound traffic"
@@ -45,6 +54,15 @@ resource "aws_security_group" "j_t_sg_allow_all" {
   }
 }
 
+resource "aws_internet_gateway" "j_t_igw" {
+  vpc_id="${aws_vpc.j_t_vpc.id}"
+
+  tags {
+   Name="J_T_VPC_IGW"
+  }
+
+}
+
 resource "aws_route_table" "j_t_public_rt_table" {
 vpc_id="${aws_vpc.j_t_vpc.id}"
 
@@ -55,14 +73,14 @@ route {
 
   tags {  Lable="J_T_RT"}
 
-
 }
-
 
 resource "aws_route_table_association" "j_t_rt_asso" {
   subnet_id ="${aws_subnet.j_t_subnet1.id}"
+  subnet_id ="${aws_subnet.j_t_subnet2.id}"
   route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
+
 
 resource "aws_instance" "j_t_API1" {
   ami                    = "ami-08489108ce5964f68"
@@ -76,27 +94,43 @@ resource "aws_instance" "j_t_API1" {
   }
 }
 
-resource "aws_eip" "j_t_eip" {
+resource "aws_eip" "j_t_eip1" {
   vpc      = true
 
   tags {
-    Name = "J_T_Eip"
+    Name = "J_T_Eip1"
   }
 }
 
 resource "aws_eip_association" "j_t_eip_asso" {
   instance_id="${aws_instance.j_t_API1.id}"
-  allocation_id ="${aws_eip.j_t_eip.id}"
+  allocation_id ="${aws_eip.j_t_eip1.id}"
 }
 
 
-resource "aws_internet_gateway" "j_t_igw" {
-  vpc_id="${aws_vpc.j_t_vpc.id}"
+resource "aws_instance" "j_t_API2" {
+  ami                    = "ami-9526abf1"
+  instance_type          = "t2.micro"
+  key_name               = "Jmy_Key_AWS_Apr_2018"
+  vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
+  subnet_id              = "${aws_subnet.j_t_subnet2.id}"
+
+  tags = {
+    Name = "J_T_API2"
+  }
+}
+
+resource "aws_eip" "j_t_eip1" {
+  vpc      = true
 
   tags {
-   Name="J_T_VPC_IGW"
+    Name = "J_T_Eip2"
   }
+}
 
+resource "aws_eip_association" "j_t_eip_asso" {
+  instance_id="${aws_instance.j_t_API2.id}"
+  allocation_id ="${aws_eip.j_t_eip2.id}"
 }
 
 
