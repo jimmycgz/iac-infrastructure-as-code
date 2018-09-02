@@ -140,7 +140,7 @@ provider "chef" {
 
   # You can set up a "Client" within the Chef Server management console.
   client_name  = "terraform"
-  key_material = "${file("Jmy_Key_AWS_Apr_2018.pem")}"
+  key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
 }
 
 # Create a Chef Environment
