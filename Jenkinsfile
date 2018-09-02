@@ -1,4 +1,5 @@
 pipeline {
+    /*  Used Dev branch to further develop the code for IaC */
     /*  Get Terraform resource file by checking out SCM*/
     /* Create Security Group by Terraform resource file */
     
@@ -26,14 +27,6 @@ environment {
                 
                 }
            }
-        stage('apply') {
-            steps {
-                sh  """
-                    ${TERRAFORM_CMD} apply -lock=false -auto-approve
-                                 
-                    """
-                  }
-                }
         
          
     }
