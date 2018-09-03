@@ -153,7 +153,7 @@ resource "chef_role" "app_server" {
   name = "app_server"
 
   run_list = [
-    "recipe[terraform]",
+    "recipe[terra-chef.rb]",
   ]
 }
 
