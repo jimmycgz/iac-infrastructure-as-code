@@ -137,6 +137,8 @@ resource "aws_instance" "j_t_API2" {
   tags = {
     Name = "J_T_API2"
   }
+  
+  # Create a file in the new instance
   provisioner "local-exec" {
   command = "echo ${aws_instance.j_t_API2.public_ip} > private_ips.txt"
   }
