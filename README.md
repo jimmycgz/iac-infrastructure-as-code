@@ -3,7 +3,7 @@
 
 
 # Use Terraform to setup API workload infra in AWS:
-Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
+
 
  ## Details to set up:
 
@@ -18,10 +18,11 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
 
 ## Setup Steps:
   * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
+  Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
 
   
-  * Step 2> [DONE!]provision 2 VMs, API1 using my own AMI with pre-configured API workload, API2 use AWS AMI need further setup workload by Chef.
+  * Step 2> [DONE!]provision 2 VMs, API1 using my own AMI with pre-configured API workload, API2 use AWS AMI need further setup workload using Apache httpd.
   
   * Step 3> [DONE!]Run Terraform via Jenkins Pipeline
   https://github.com/david-wells-1/jenkins-terraform-pipeline
