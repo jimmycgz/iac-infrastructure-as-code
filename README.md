@@ -26,12 +26,13 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   * Step 3> [DONE!]Run Terraform via Jenkins Pipeline
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
-  * Step 4> [To Do] Run Chef local mode through Terraform
+  * Step 4> [To Do] Install httpd web service in API2
+  
+  * Step 5> [To Do] Run Chef local mode through Terraform
   Need to figure out how to use Chef client mode to manage a new node created by Terraform
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
-  
-  * Step 5> [To Do]Deploy to Docker by Terraform
+  * Step 6> [To Do]Deploy to Docker by Terraform
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
   
