@@ -159,7 +159,7 @@ provider "chef" {
 
 resource "chef_node" "j_t_API2" {
   name             = "j_t_API2-environment"
-  environment_name = "${chef_environment.j_t_API2.name}"
+#  environment_name = "${chef_environment.j_t_API2.name}"
   run_list         = ["recipe[terra-chef.rb]"]
 }
 
