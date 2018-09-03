@@ -12,6 +12,7 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
   Step 4> [To Do] Run Chef local mode through Terraform
+  Need to figure out how to use Chef client mode to manage a new node created by Terraform
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
   
