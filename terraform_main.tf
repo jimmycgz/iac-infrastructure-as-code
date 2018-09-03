@@ -134,10 +134,25 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 }
 
 
-#
+# Create a host file for ansible to add the IP of new EC2 instance(API2)
 
-  key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
+provisioner "local-exec" {
+  command = <<HEREDOC
+cat <<EOF >hosts
+[API-Group]
+${aws_instance.j_t_API2.public_ip}
+
+EOF
+HEREDOC
+  }
+
+provisioner "local-exec" {
+  command= "sleep 7m && ansible-playbook -e 'host_key_checking=False' -i hosts ansible-web.yml"
+    
+
+  #key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
 }
+
 
 
 
