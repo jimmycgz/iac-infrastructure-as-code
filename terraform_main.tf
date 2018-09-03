@@ -144,19 +144,24 @@ provider "chef" {
 }
 
 # Create a Chef Environment
-resource "chef_environment" "production" {
-  name = "production"
-}
+#resource "chef_environment" "production" {
+#  name = "production"
+#}
 
 # Create a Chef Role
-resource "chef_role" "app_server" {
-  name = "app_server"
+#resource "chef_role" "app_server" {
+#  name = "app_server"
 
-  run_list = [
-    "recipe[terra-chef.rb]",
-  ]
+#  run_list = [
+#    "recipe[terra-chef.rb]",
+#  ]
+#}
+
+resource "chef_node" "j_t_API2" {
+  name             = "example-environment"
+  environment_name = "${chef_environment.example.name}"
+  run_list         = ["recipe[terra-chef.rb]"]
 }
-
 
 
 
