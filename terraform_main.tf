@@ -38,13 +38,32 @@ resource "aws_security_group" "j_t_sg_allow_all" {
   name        = "j_t_sg-demo1"
   description = "Test SG in Subnet1: allow all inbound traffic"
   vpc_id      = "${aws_vpc.j_t_vpc.id}"
-
+  
+    # HTTP access from anywhere
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
+    # HTTP access from anywhere
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  
+    # HTTP access from anywhere
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
 
   egress {
     from_port   = 0
