@@ -133,34 +133,7 @@ resource "aws_eip_association" "j_t_eip2_asso" {
   allocation_id ="${aws_eip.j_t_eip2.id}"
 }
 
-# Configure the Chef provider
-provider "chef" {
-  server_url = "https://api.chef.io/organizations/example/"
 
-  # You can set up a "Client" within the Chef Server management console.
-  client_name  = "terraform"
-  key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
-}
-
-# Create a Chef Environment
-#resource "chef_environment" "production" {
-#  name = "production"
-#}
-
-# Create a Chef Role
-#resource "chef_role" "app_server" {
-#  name = "app_server"
-
-#  run_list = [
-#    "recipe[terra-chef.rb]",
-#  ]
-#}
-
-resource "chef_node" "j_t_API2" {
-  name             = "j_t_API2-environment"
-#  environment_name = "${chef_environment.j_t_API2.name}"
-  run_list         = ["recipe[terra-chef.rb]"]
-}
 
 
 
