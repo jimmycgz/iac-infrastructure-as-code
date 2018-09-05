@@ -1,9 +1,11 @@
 # Infrastructure as Code  -My Collections using Terraform, Ansible, Chef and Linux scripting
 
 # Use Terraform to setup API workload infra in AWS:
+
 Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
 
   Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
+  
   Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
   
   Step 2> [DONE!]provision 2 VMs, API1 using my own AMI with pre-configured API workload, API2 use AWS AMI need further setup workload by Chef.
