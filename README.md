@@ -1,31 +1,51 @@
-# Infrastructure as Code  -My Collections using Terraform, Ansible, Chef and Linux scripting
+# Infrastructure as Code  
+## My Collections using Terraform, Ansible, Chef and Linux scripting
+
 
 # Use Terraform to setup API workload infra in AWS:
 
-Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
 
-  Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
+ ## Details to set up:
+
+* A VPC
+* Two subnets
+* An internet gateway
+* A security group
+* Using existing SSH key pair
+* Two EC2 instances, API1 on Subnet1, API2 on Subnet2
+* Within the instance:
+   Simple API code written by Node.JS
+
+## Setup Steps:
+  * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
   
+  Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
+
   Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
+
   
-  Step 2> [DONE!]provision 2 VMs, API1 using my own AMI with pre-configured API workload, API2 use AWS AMI need further setup workload by Chef.
+  * Step 2> [DONE!]provision 2 VMs, API1 using my own AMI with pre-configured API workload, API2 use AWS AMI need further setup workload using Apache httpd.
   
-  Step 3> [DONE!]Run Terraform via Jenkins Pipeline
-  
+  * Step 3> [DONE!]Run Terraform via Jenkins Pipeline
+
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
   Step 3-1>[Working in Dev Branch] Auto Triger Terraform task with GitHub Push
   
-  Step 4> [To Do] Run Chef local mode through Terraform
+  
+  * Step 4> [To Do] Install httpd web service in API2
+  
+  * Step 5> [To Do] Run Chef local mode through Terraform
+  Need to figure out how to use Chef client mode to manage a new node created by Terraform
   
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
-  
-  Step 5> [To Do]Deploy to Docker by Terraform
+  * Step 6> [To Do]Deploy to Docker by Terraform
+
   
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
-  
+   
   
 # Ansible Script for Pull Deployment
 ansible gcp_web_prod -a "sudo reboot"
@@ -44,7 +64,7 @@ sh $HOME/ansi_deploy.sh
 # Chef Script
 sudo chef-client --local-mode cookbooks/apache/recipes/server.rb
 
-# Chef Recipe to build hello word web service
+## Chef Recipe to build hello word web service
 
 package 'httpd'
 
@@ -85,9 +105,9 @@ seq 254 | xargs -iIP -P255 ping -c1 10.0.2.IP |gawk -F'[ :]' '/time=/{print $4}'
 echo "Run Deploy script file in a loop for all pinable instances"
 
 
-# Run Push script in Jenkins
+## Run Push script in Jenkins
 for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
 
-# Push Deployment: Run Deploy script file in a loop
+## Push Deployment: Run Deploy script file in a loop
 #Ansible-playbook mybook.yml –syntax-check 
 

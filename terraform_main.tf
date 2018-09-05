@@ -38,13 +38,32 @@ resource "aws_security_group" "j_t_sg_allow_all" {
   name        = "j_t_sg-demo1"
   description = "Test SG in Subnet1: allow all inbound traffic"
   vpc_id      = "${aws_vpc.j_t_vpc.id}"
-
+  
+    # HTTP access from anywhere
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
+    # HTTP access from anywhere
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  
+    # HTTP access from anywhere
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
 
   egress {
     from_port   = 0
@@ -118,6 +137,21 @@ resource "aws_instance" "j_t_API2" {
   tags = {
     Name = "J_T_API2"
   }
+  
+  # Add the ip of API2 to a host file for ansible
+  
+  provisioner "remote-exec" {
+  command = "echo ${aws_instance.j_t_API2.public_ip} > private_ips.txt"
+    
+  # provisioner "local-exec" {
+  #  command= "sleep 7m && ansible-playbook -e 'host_key_checking=False' -i hosts ansible-web.yml"
+  
+  #key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
+    
+  # end of provisioner "remote-exec" 
+  }
+
+# resource "aws_instance" "j_t_API2" 
 }
 
 resource "aws_eip" "j_t_eip2" {
@@ -132,9 +166,5 @@ resource "aws_eip_association" "j_t_eip2_asso" {
   instance_id="${aws_instance.j_t_API2.id}"
   allocation_id ="${aws_eip.j_t_eip2.id}"
 }
-
-
-
-
 
 
