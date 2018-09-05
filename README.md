@@ -12,6 +12,8 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
+  Step 3-1>[Working in Dev Branch] Auto Triger Terraform task with GitHub Push
+  
   Step 4> [To Do] Run Chef local mode through Terraform
   
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
