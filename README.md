@@ -9,13 +9,16 @@ Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   Step 2> [DONE!]provision 2 VMs, API1 using my own AMI with pre-configured API workload, API2 use AWS AMI need further setup workload by Chef.
   
   Step 3> [DONE!]Run Terraform via Jenkins Pipeline
+  
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
   Step 4> [To Do] Run Chef local mode through Terraform
+  
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
   
   Step 5> [To Do]Deploy to Docker by Terraform
+  
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
   
