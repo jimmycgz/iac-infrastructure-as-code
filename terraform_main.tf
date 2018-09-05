@@ -138,11 +138,20 @@ resource "aws_instance" "j_t_API2" {
     Name = "J_T_API2"
   }
   
-  # Create a file in the new instance
-  provisioner "local-exec" {
-  command = "echo ${aws_instance.j_t_API2.public_ip} > private_ips.txt"
-  }
+  # Add the ip of API2 to a host file for ansible
   
+  provisioner "remote-exec" {
+  command = "echo ${aws_instance.j_t_API2.public_ip} > private_ips.txt"
+    
+  # provisioner "local-exec" {
+  #  command= "sleep 7m && ansible-playbook -e 'host_key_checking=False' -i hosts ansible-web.yml"
+  
+  #key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
+    
+  # end of provisioner "remote-exec" 
+  }
+
+# resource "aws_instance" "j_t_API2" 
 }
 
 resource "aws_eip" "j_t_eip2" {
@@ -159,16 +168,6 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 }
 
 
-# Create a host file for ansible to add the IP of new EC2 instance(API2)
-
-
-
-# provisioner "local-exec" {
-#  command= "sleep 7m && ansible-playbook -e 'host_key_checking=False' -i hosts ansible-web.yml"
-    
-
-  #key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
-#}
 
 
 
