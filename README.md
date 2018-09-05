@@ -18,6 +18,7 @@
 
 ## Setup Steps:
   * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
+  
   Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
   Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
 
@@ -27,13 +28,18 @@
   * Step 3> [DONE!]Run Terraform via Jenkins Pipeline
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
+  Step 3-1>[Working in Dev Branch] Auto Triger Terraform task with GitHub Push
+  
+  
   * Step 4> [To Do] Install httpd web service in API2
   
   * Step 5> [To Do] Run Chef local mode through Terraform
   Need to figure out how to use Chef client mode to manage a new node created by Terraform
+  
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
   * Step 6> [To Do]Deploy to Docker by Terraform
+  
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
   
