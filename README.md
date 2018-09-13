@@ -20,6 +20,7 @@
   * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
   
   Refer to Repo:https://github.com/jimmycgz/Tarraform-Slalom-Dojo
+  https://www.hashicorp.com/resources/hangout-terraform-azure-for-beginners
 
   Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
 
