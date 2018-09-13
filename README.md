@@ -41,10 +41,11 @@
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
   * Step 6> [To Do]Deploy to Docker by Terraform
-
-  
+ 
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
+   * Step 7> [To Do]Deploy to Azure container by Terraform
+   https://github.com/OSSCanada/portal-and-cloudshell/blob/master/main.tf
    
   
 # Ansible Script for Pull Deployment
