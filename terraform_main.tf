@@ -94,13 +94,10 @@ route {
 
 }
 
-resource "aws_route_table_association" "j_t_rt_asso" {
-  subnet_id ="${aws_subnet.j_t_subnet1.id}"
-  route_table_id="${aws_route_table.j_t_public_rt_table.id}"
-}
 
 resource "aws_route_table_association" "j_t_rt_asso" {
   subnet_id ="${aws_subnet.j_t_subnet2.id}"
+  subnet_id ="${aws_subnet.j_t_subnet1.id}"
   route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
 
