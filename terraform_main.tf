@@ -96,10 +96,13 @@ route {
 
 resource "aws_route_table_association" "j_t_rt_asso" {
   subnet_id ="${aws_subnet.j_t_subnet1.id}"
-  subnet_id ="${aws_subnet.j_t_subnet2.id}"
   route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
 
+resource "aws_route_table_association" "j_t_rt_asso" {
+  subnet_id ="${aws_subnet.j_t_subnet2.id}"
+  route_table_id="${aws_route_table.j_t_public_rt_table.id}"
+}
 
 resource "aws_instance" "j_t_API1" {
   ami                    = "ami-0d12bbc5df9d0d8c8"
