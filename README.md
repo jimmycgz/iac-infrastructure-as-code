@@ -14,7 +14,7 @@
 * Using existing SSH key pair
 * Two EC2 instances, API1 on Subnet1, API2 on Subnet2
 * Within the instance:
-   Simple API code written by Node.JS
+   Sample API code written by Node.JS
 
 ## Setup Steps:
   * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
@@ -39,9 +39,10 @@
   Step 3-1>[Working in Dev Branch] Auto Triger Terraform task with GitHub Push
   
   
-  * Step 4> [To Do] Install httpd web service in API2
+  * Step 4> [DONE! Sep26] Manually install httpd web service in API2 on GCP and connect it with API1 on AWS Tool Server: http://35.231.144.74:5000/
   
   * Step 5> [To Do] Run Chef local mode through Terraform
+  
   Need to figure out how to use Chef client mode to manage a new node created by Terraform
   
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
@@ -115,6 +116,4 @@ echo "Run Deploy script file in a loop for all pinable instances"
 ## Run Push script in Jenkins
 for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
 
-## Push Deployment: Run Deploy script file in a loop
-#Ansible-playbook mybook.yml –syntax-check 
 
