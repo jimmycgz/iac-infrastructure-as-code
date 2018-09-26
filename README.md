@@ -12,7 +12,7 @@
 * An internet gateway
 * A security group
 * Using existing SSH key pair
-* Two EC2 instances, API1 on Subnet1, API2 on Subnet2
+* Two EC2 instances, API1 on Subnet1, API2AWS on Subnet2
 * Within the instance:
    Sample API code written by Node.JS
 
@@ -39,7 +39,9 @@
   Step 3-1>[Working in Dev Branch] Auto Triger Terraform task with GitHub Push
   
   
-  * Step 4> [DONE! Sep26] Manually install httpd web service in API2 on GCP and connect it with API1 on AWS Tool Server: http://35.231.144.74:5000/
+  * Step 4> [DONE! Sep26] Manually install httpd web service in API2GCP on GCP and connect it with API1 on AWS Tool Server: http://35.231.144.74:5000/  manually added this ip to the config.json in API1 so they both are connected.
+  
+  * Step 4.2> [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
   
   * Step 5> [To Do] Run Chef local mode through Terraform
   
