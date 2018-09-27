@@ -107,6 +107,19 @@ resource "aws_instance" "j_t_API1" {
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
   subnet_id              = "${aws_subnet.j_t_subnet1.id}"
+  
+  # Run remote provisioner on the instance after creating it.
+  # Create a file for test
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo { >host-ip.txt",
+      "echo IP=192.168.4.1 >>host-ip.txt",
+      "echo } >>host-ip.txt",
+      
+    ]
+  }
+  
 
   tags = {
     Name = "J_T_API1"
