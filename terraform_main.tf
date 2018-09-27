@@ -109,6 +109,13 @@ resource "aws_instance" "j_t_API1" {
   subnet_id              = "${aws_subnet.j_t_subnet1.id}"
   
   # Run remote provisioner on the instance after creating it.
+    connection {
+    type = "ssh"
+    user = "ubuntu"
+    #private_key = "${file("~/.ssh/id_rsa")}"
+    private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
+  }
+  
   # Create a file for test
   
   provisioner "remote-exec" {
