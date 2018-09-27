@@ -112,7 +112,7 @@ resource "aws_instance" "j_t_API1" {
     connection {
     type = "ssh"
     user = "ubuntu"
-    private_key = "${file("~/.ssh/id_rsa")}"
+    private_key = "${file("/home/ubuntu/.ssh/id_rsa")}"
     #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
   }
   
