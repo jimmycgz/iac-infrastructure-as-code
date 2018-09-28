@@ -34,7 +34,7 @@ resource "aws_subnet" "j_t_subnet2" {
   }
 }
 
-resource "aws_security_group" "j_t_sg_allow_all" {
+resource "aws_security_group" "j_t_sg_demo1" {
   name        = "j_t_sg-demo1"
   description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
   vpc_id      = "${aws_vpc.j_t_vpc.id}"
@@ -106,7 +106,7 @@ resource "aws_instance" "j_t_API1" {
   ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
+  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
   subnet_id              = "${aws_subnet.j_t_subnet1.id}"
   
 
@@ -157,7 +157,7 @@ resource "aws_instance" "j_t_API2" {
   ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
+  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
   subnet_id              = "${aws_subnet.j_t_subnet2.id}"
 
   tags = {
