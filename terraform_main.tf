@@ -109,24 +109,7 @@ resource "aws_instance" "j_t_API1" {
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
   subnet_id              = "${aws_subnet.j_t_subnet1.id}"
   
-  # Run remote provisioner on the instance after creating it.
-    connection {
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
-    #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
-  }
-  
-  # Create a file for test
-  
-  provisioner "remote-exec" {
-    inline = [
-      "echo { >host-ip.txt",
-      "echo IP=192.168.4.1 >>host-ip.txt",
-      "echo } >>host-ip.txt",
-      
-    ]
-  }
+
   
 
   tags = {
@@ -145,7 +128,29 @@ resource "aws_eip" "j_t_eip1" {
 resource "aws_eip_association" "j_t_eip1_asso" {
   instance_id="${aws_instance.j_t_API1.id}"
   allocation_id ="${aws_eip.j_t_eip1.id}"
-}
+  
+    # Run remote provisioner on the instance after association of EIP to Instance1.
+    connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
+  }
+  
+  # Create a file for test
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo { >host-ip.txt",
+      "echo IP=192.168.4.1 >>host-ip.txt",
+      "echo } >>host-ip.txt",
+      
+    ]
+  }
+
+  # EIP1 association
+ } 
+
 
 
 resource "aws_instance" "j_t_API2" {
