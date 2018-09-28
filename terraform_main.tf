@@ -36,7 +36,7 @@ resource "aws_subnet" "j_t_subnet2" {
 
 resource "aws_security_group" "j_t_sg_allow_all" {
   name        = "j_t_sg-demo1"
-  description = "Test SG in Subnet1: allow all inbound traffic"
+  description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
   vpc_id      = "${aws_vpc.j_t_vpc.id}"
   
     # HTTP access from anywhere
@@ -102,7 +102,8 @@ resource "aws_route_table_association" "j_t_rt_asso" {
 }
 
 resource "aws_instance" "j_t_API1" {
-  ami                    = "ami-0d12bbc5df9d0d8c8"
+  #ami                    = "ami-0d12bbc5df9d0d8c8"
+  ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
@@ -112,7 +113,7 @@ resource "aws_instance" "j_t_API1" {
     connection {
     type = "ssh"
     user = "ubuntu"
-    private_key = "${file("/home/ubuntu/.ssh/id_rsa")}"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
     #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
   }
   
