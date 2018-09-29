@@ -101,9 +101,11 @@ resource "aws_route_table_association" "j_t_rt_asso" {
   route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
 
-resource "aws_instance" "j_t_API1" {
+
+resource "aws_instance" "j_t_API1-AWS" {
   ami                    = "ami-0d12bbc5df9d0d8c8"
-  # ami                    = "ami-9526abf1"
+  #ami                    = "ami-9526abf1"
+
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
@@ -113,7 +115,7 @@ resource "aws_instance" "j_t_API1" {
   
 
   tags = {
-    Name = "J_T_API1"
+    Name = "J_T_API1-AWS"
   }
 }
 
@@ -126,9 +128,12 @@ resource "aws_eip" "j_t_eip1" {
 }
 
 resource "aws_eip_association" "j_t_eip1_asso" {
-  instance_id="${aws_instance.j_t_API1.id}"
+  instance_id="${aws_instance.j_t_API1-AWS.id}"
   allocation_id ="${aws_eip.j_t_eip1.id}"
   
+  
+  # EIP1 association
+ } 
 
 
   
@@ -136,7 +141,7 @@ resource "aws_eip_association" "j_t_eip1_asso" {
  } 
 
 
-resource "aws_instance" "j_t_API2" {
+resource "aws_instance" "j_t_API2-AWS" {
   ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
@@ -144,7 +149,7 @@ resource "aws_instance" "j_t_API2" {
   subnet_id              = "${aws_subnet.j_t_subnet2.id}"
 
   tags = {
-    Name = "J_T_API2"
+    Name = "J_T_API2-AWS"
   }
   
 }
@@ -158,7 +163,7 @@ resource "aws_eip" "j_t_eip2" {
 }
 
 resource "aws_eip_association" "j_t_eip2_asso" {
-  instance_id="${aws_instance.j_t_API2.id}"
+  instance_id="${aws_instance.j_t_API2-AWS.id}"
   allocation_id ="${aws_eip.j_t_eip2.id}"
 }
 
@@ -190,28 +195,43 @@ resource "null_resource" "rerun" {
   command=" echo to be test ansible "  
   }
   
- # Run remote provisioner on the instance after association of EIP to Instance1.
+
+ # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
     
-  # Add the ip of API2-GCP to API1-AWS config file
-      connection {
+  # Add the ip of API3-GCP to API1-AWS config file
+
+    connection {
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
     #private_key = "${file("${path.module}/keys/terraform")}"
     host="${aws_eip.j_t_eip1.public_ip}"
   }
+ 
+ # Bootstrape API2-AWS from a bare new AWS ami
+ # Copies the myapp.conf file to /etc/myapp.conf
+  provisioner "file" {
+    source      = "/home/ubuntu/build-api1.sh"
+    destination = "/home/ubuntu/build-api1.sh"
+  }
   
   provisioner "remote-exec" {
-    # Update the ip address of API2 (GCP) to the config file on API1 (AWS Subnet1)
+    # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
       inline = [
-      "echo { >/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo  \"api2_url\": \"http://35.231.144.74:5000\" >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+        
+      #"sh /home/ubuntu/build-api1.sh",
+        # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
+        
+      "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  '  \"api2_url\": \" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+
       "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
      ]
   }
   
 
-  
+   
+
   #resource "null_resource" "uuid-trigger
 }
 
