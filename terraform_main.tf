@@ -184,7 +184,7 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 }
 
 
-resource "null_resource" "uuid-trigger" {
+resource "null_resource" "ansible" {
 # Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
   # By default, Terraform only run file
   
