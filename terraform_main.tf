@@ -192,7 +192,7 @@ resource "null_resource" "rerun" {
   
  # Run remote provisioner on the instance after association of EIP to Instance1.
     
-  # Create a file for test
+  # Add the ip of API2-GCP to API1-AWS config file
       connection {
     type = "ssh"
     user = "ubuntu"
