@@ -59,8 +59,8 @@
   
   Issue found: Can't associate one IGW to multiple subnets, Terraform seems only associate it to the last one in resource IGW_asso
   
-  ** Step [WIP] 4.4 Change API2 (GCP) to API3-GCP, correc the display name in API-AWS code.
-    Sep 29th: have created 3 folders in Repo API-DEMO, just need to futher tailor the code accordingly.
+  ** Step [WIP] 4.4 Rename API2 (GCP) to API3-GCP, correc the display name in API-AWS code.
+    Sep 29th: have created 3 folders in Repo API-DEMO, just need to futher tailor the code accordingly. And then try ansible as Step 4.5 after resolving the above issue to associate IGW to Subnet 2.
   
   
   ** Step 4.5> [WIP] Use ansible to deploy API web service for API1-AWS, API2-AWS and connect to API3-GCP.
