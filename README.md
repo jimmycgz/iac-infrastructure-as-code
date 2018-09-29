@@ -36,12 +36,21 @@
 
   https://github.com/david-wells-1/jenkins-terraform-pipeline
   
-  Step 3-1>[Working in Dev Branch] Auto Triger Terraform task with GitHub Push
+  * Step 4> [WIP] Deploy API2 instance and connect with API1
   
+   ** Step 4.1> [DONE! Sep26] Manually installed httpd web service in API2GCP on GCP and connect it with API1 on AWS Tool Server: http://35.231.144.74:5000/  manually added this ip to the config.json in API1 (AWS Subnet1) so they both are connected.
+   
+   ** Step 4.2> [DONE! Sep28] User Terraform Remote-exec to automaticaly update the ip address of API2 (GCP) into the config.json in API1 (AWS Subnet1) 
+   
+   Suessfully done this via resource "null_resource" "rerun" and use uuid as trigger , find this section at the bottom of the .tf file
+   
+ Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
   
-  * Step 4> [DONE! Sep26] Manually install httpd web service in API2GCP on GCP and connect it with API1 on AWS Tool Server: http://35.231.144.74:5000/  manually added this ip to the config.json in API1 so they both are connected.
+  Issue found: remote-exec creates file on the terraform host if I run it in instance resource or eip resource
+  Resolution: run it in "null_resource" and use uuid as trigger.
   
-  * Step 4.2> [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
+    * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
+  
   
   * Step 5> [To Do] Run Chef local mode through Terraform
   
