@@ -133,18 +133,19 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   
   
   # Create a file for test
-  
-  provisioner "remote-exec" {
-        connection {
+      connection {
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
     #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
   }
   
-    inline = [
+  provisioner "remote-exec" {
+ 
+      inline = [
       "echo { >/home/ubuntu/remote-host-ip.txt",
       "echo IP=192.168.4.1 >>/home/ubuntu/remote-host-ip.txt",
+      "echo IP=192.168.4.2 >>/home/ubuntu/remote-host-ip.txt",
       "echo } >>/home/ubuntu/remote-host-ip.txt",
      ]
   }
@@ -153,22 +154,13 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   
   provisioner "local-exec" {
     command = "echo IP=192.168.4.1 >/home/ubuntu/local-host-ip.txt"
+
+  }
+  
+  provisioner "local-exec" {
     command = "echo IP=192.168.4.2 >>/home/ubuntu/local-host-ip.txt"
   }
   
-      # Copies from Terraform server to the new instance
-  provisioner "file" {
-    source      = "/home/ubuntu/local-host-ip.txt"
-    destination = "/home/ubuntu/local-host-ip.txt"
-  }
-
-  # Copies the string in content 
-  provisioner "file" {
-    content     = "Test file provisioner to add one line in txt file"
-    destination = "/home/ubuntu/local-host-ip.txt"
-  }
-
-
   # EIP1 association
  } 
 
