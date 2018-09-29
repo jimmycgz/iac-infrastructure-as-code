@@ -50,9 +50,12 @@
   
   Resolution: run it in "null_resource" and use uuid as trigger.
   
-  Issue found: can't bootstrap by neither remote-exec or run a .sh file in the new instance, try ansible for config manangement as below step.
+  Issue found: can't bootstrap by neither remote-exec or run a .sh file in the new instance, 
+  Resolution: Step 4.3> [DONE!] Use my own AMI with the API pre-configured, then user Terraform remote-exec to update the ip address of API3-GCP into the Json config file of API1-AWS.
   
-  ** Step 4.3> [WIP] Use ansible to deploy API web service for API1-AWS, API2-AWS and connect to API3-GCP.
+  Step 4.4> try ansible for config manangement as below step.
+  
+  ** Step 4.4> [WIP] Use ansible to deploy API web service for API1-AWS, API2-AWS and connect to API3-GCP.
   
   * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
   
