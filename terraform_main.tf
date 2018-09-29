@@ -150,15 +150,7 @@ resource "aws_eip_association" "j_t_eip1_asso" {
      ]
   }
   
-  # Add the new public ip (EIP1 and EIP2) to local config file
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip1.public_ip} >/home/ubuntu/host-ip-local.txt"
 
-  }
-  
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-local.txt"
-  }
 
   
   # EIP1 association
@@ -189,6 +181,36 @@ resource "aws_eip" "j_t_eip2" {
 resource "aws_eip_association" "j_t_eip2_asso" {
   instance_id="${aws_instance.j_t_API2.id}"
   allocation_id ="${aws_eip.j_t_eip2.id}"
+}
+
+
+resource "null_resource" "uuid-trigger" {
+# Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
+  # By default, Terraform only run file
+  
+  triggers {
+    key = "${uuid()}"
+  }
+
+    # Add the new public ip (EIP1 and EIP2) to local config file
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip1.public_ip} >/home/ubuntu/host-ip-local.txt"
+
+  }
+  
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-local.txt"
+ #   command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+ 
+  }
+    
+  
+  provisioner "local-exec" {
+  #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+    
+  }
+  
+  #resource "null_resource" "uuid-trigger
 }
 
 
