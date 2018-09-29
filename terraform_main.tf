@@ -143,21 +143,21 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   provisioner "remote-exec" {
  
       inline = [
-      "echo { >/home/ubuntu/remote-host-ip.txt",
-      "echo ${aws_eip.j_t_eip1.id} >>/home/ubuntu/remote-host-ip.txt",
-      "echo ${aws_eip.j_t_eip2.id} >>/home/ubuntu/remote-host-ip.txt",
-      "echo } >>/home/ubuntu/remote-host-ip.txt",
+      "echo { >/home/ubuntu/host-ip-remote.txt",
+      "echo ${aws_eip.j_t_eip1.public_ip} >>/home/ubuntu/host-ip-remote.txt",
+      "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-remote.txt",
+      "echo } >>/home/ubuntu/host-ip-remote.txt",
      ]
   }
   
   # Add the new public ip (EIP1 and EIP2) to local config file
   provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip1.id} >/home/ubuntu/host-ip-local.txt"
+    command = "echo ${aws_eip.j_t_eip1.public_ip} >/home/ubuntu/host-ip-local.txt"
 
   }
   
   provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip2.id} >>/home/ubuntu/host-ip-local.txt"
+    command = "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-local.txt"
   }
 
   
