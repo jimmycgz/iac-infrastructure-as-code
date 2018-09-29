@@ -34,9 +34,9 @@ resource "aws_subnet" "j_t_subnet2" {
   }
 }
 
-resource "aws_security_group" "j_t_sg_allow_all" {
+resource "aws_security_group" "j_t_sg_demo1" {
   name        = "j_t_sg-demo1"
-  description = "Test SG in Subnet1: allow all inbound traffic"
+  description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
   vpc_id      = "${aws_vpc.j_t_vpc.id}"
   
     # HTTP access from anywhere
@@ -94,22 +94,26 @@ route {
 
 }
 
+
 resource "aws_route_table_association" "j_t_rt_asso" {
-  subnet_id ="${aws_subnet.j_t_subnet1.id}"
   subnet_id ="${aws_subnet.j_t_subnet2.id}"
+  subnet_id ="${aws_subnet.j_t_subnet1.id}"
   route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
 
-
-resource "aws_instance" "j_t_API1" {
-  ami                    = "ami-08489108ce5964f68"
+resource "aws_instance" "j_t_API1-AWS" {
+  # ami                    = "ami-0d12bbc5df9d0d8c8"
+  ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
+  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
   subnet_id              = "${aws_subnet.j_t_subnet1.id}"
+  
+
+  
 
   tags = {
-    Name = "J_T_API1"
+    Name = "J_T_API1-AWS"
   }
 }
 
@@ -122,36 +126,27 @@ resource "aws_eip" "j_t_eip1" {
 }
 
 resource "aws_eip_association" "j_t_eip1_asso" {
-  instance_id="${aws_instance.j_t_API1.id}"
+  instance_id="${aws_instance.j_t_API1-AWS.id}"
   allocation_id ="${aws_eip.j_t_eip1.id}"
-}
+  
 
 
-resource "aws_instance" "j_t_API2" {
+  
+  # EIP1 association
+ } 
+
+
+resource "aws_instance" "j_t_API2-AWS" {
   ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_allow_all.id}"]
+  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
   subnet_id              = "${aws_subnet.j_t_subnet2.id}"
 
   tags = {
-    Name = "J_T_API2"
+    Name = "J_T_API2-AWS"
   }
   
-  # Add the ip of API2 to a host file for ansible
-  
-  provisioner "remote-exec" {
-  command = "echo ${aws_eip.j_t_eip2.id} > private_ips.txt"
-    
-  # provisioner "local-exec" {
-  #  command= "sleep 7m && ansible-playbook -e 'host_key_checking=False' -i hosts ansible-web.yml"
-  
-  #key_material = "${file("../Jmy_Key_AWS_Apr_2018.pem")}"
-    
-  # end of provisioner "remote-exec" 
-  }
-
-# resource "aws_instance" "j_t_API2" 
 }
 
 resource "aws_eip" "j_t_eip2" {
@@ -163,8 +158,89 @@ resource "aws_eip" "j_t_eip2" {
 }
 
 resource "aws_eip_association" "j_t_eip2_asso" {
-  instance_id="${aws_instance.j_t_API2.id}"
+  instance_id="${aws_instance.j_t_API2-AWS.id}"
   allocation_id ="${aws_eip.j_t_eip2.id}"
+}
+
+
+resource "null_resource" "rerun" {
+# Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
+  # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
+  
+  
+  triggers {
+    rerun= "${uuid()}"
+  }
+
+    # Add the new public ip (EIP1 and EIP2) to local config file
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip1.public_ip} >/home/ubuntu/host-ip-local.txt"
+
+  }
+  
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-local.txt"
+ #   command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+ 
+  }
+    
+  
+  provisioner "local-exec" {
+  #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+  command=" echo to be test ansible "  
+  }
+  
+ # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
+    
+  # Add the ip of API2-GCP to API1-AWS config file
+      connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key = "${file("${path.module}/keys/terraform")}"
+    host="${aws_eip.j_t_eip1.public_ip}"
+  }
+  
+  provisioner "remote-exec" {
+    # Update the ip address of API3-GCP to the config file on API1-AWS (AWS Subnet1)
+      inline = [
+      "echo { >/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  '  \"api2_url\":\" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+     ]
+  }
+  
+  # Bootstrape API2-AWS from a bare new AWS ami
+  # Add the ip of API3-GCP to API2-AWS config file
+      connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key = "${file("${path.module}/keys/terraform")}"
+    host="${aws_eip.j_t_eip2.public_ip}"
+  }
+  
+  provisioner "remote-exec" {
+    # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
+      inline = [
+        
+        "git clone https://github.com/slalomdojo/terraform-challenge"
+        "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -; sudo apt-get install -y nodejs"
+        "cd terraform-challenge/run-your-own-dojo/apis/api-1"
+        "npm install"
+        "sudo npm install -g forever"
+        "curl localhost:3000/health"
+        "crontab -l > cron-tmp"
+        "echo '\"@reboot forever start --watch --watchDirectory /home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/ /home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/index.js\"' >> cron-tmp"
+        "crontab cron-tmp"
+        
+      "echo { >/home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  '\"api2_url\": \"http://35.231.144.74:5000\"' >>/home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo } >>/home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+     ]
+  }
+  
+  #resource "null_resource" "uuid-trigger
 }
 
 
