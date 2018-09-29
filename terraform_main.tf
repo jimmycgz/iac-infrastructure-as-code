@@ -192,7 +192,7 @@ resource "null_resource" "rerun" {
   
  # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
     
-  # Add the ip of API2-GCP to API1-AWS config file
+  # Add the ip of API3-GCP to API1-AWS config file
       connection {
     type = "ssh"
     user = "ubuntu"
@@ -200,46 +200,27 @@ resource "null_resource" "rerun" {
     #private_key = "${file("${path.module}/keys/terraform")}"
     host="${aws_eip.j_t_eip1.public_ip}"
   }
-  
-  provisioner "remote-exec" {
-    # Update the ip address of API3-GCP to the config file on API1-AWS (AWS Subnet1)
-      inline = [
-      "echo { >/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo  '  \"api2_url\":\" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-     ]
-  }
-  
-  # Bootstrape API2-AWS from a bare new AWS ami
-  # Add the ip of API3-GCP to API2-AWS config file
-      connection {
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
-    #private_key = "${file("${path.module}/keys/terraform")}"
-    host="${aws_eip.j_t_eip2.public_ip}"
+ 
+ # Bootstrape API2-AWS from a bare new AWS ami
+ # Copies the myapp.conf file to /etc/myapp.conf
+  provisioner "file" {
+    source      = "/home/ubuntu/build-api1.sh"
+    destination = "/home/ubuntu/build-api1.sh"
   }
   
   provisioner "remote-exec" {
     # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
       inline = [
         
-        "git clone https://github.com/slalomdojo/terraform-challenge"
-        "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -; sudo apt-get install -y nodejs"
-        "cd terraform-challenge/run-your-own-dojo/apis/api-1"
-        "npm install"
-        "sudo npm install -g forever"
-        "curl localhost:3000/health"
-        "crontab -l > cron-tmp"
-        "echo '\"@reboot forever start --watch --watchDirectory /home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/ /home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/index.js\"' >> cron-tmp"
-        "crontab cron-tmp"
+      "sh /home/ubuntu/build-api1.sh"
         
-      "echo { >/home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo  '\"api2_url\": \"http://35.231.144.74:5000\"' >>/home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo } >>/home/ubuntu/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo { >/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  '  \"api2_url\":\" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
      ]
   }
   
+   
   #resource "null_resource" "uuid-trigger
 }
 
