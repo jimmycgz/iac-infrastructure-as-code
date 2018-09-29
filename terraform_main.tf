@@ -101,9 +101,11 @@ resource "aws_route_table_association" "j_t_rt_asso" {
   route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
 
+
 resource "aws_instance" "j_t_API1-AWS" {
   ami                    = "ami-0d12bbc5df9d0d8c8"
   #ami                    = "ami-9526abf1"
+
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
@@ -129,6 +131,9 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   instance_id="${aws_instance.j_t_API1-AWS.id}"
   allocation_id ="${aws_eip.j_t_eip1.id}"
   
+  
+  # EIP1 association
+ } 
 
 
   
@@ -190,10 +195,12 @@ resource "null_resource" "rerun" {
   command=" echo to be test ansible "  
   }
   
+
  # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
     
   # Add the ip of API3-GCP to API1-AWS config file
-      connection {
+
+    connection {
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
@@ -217,11 +224,14 @@ resource "null_resource" "rerun" {
         
       "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
       "echo  '  \"api2_url\": \" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+
       "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
      ]
   }
   
+
    
+
   #resource "null_resource" "uuid-trigger
 }
 
