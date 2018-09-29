@@ -212,9 +212,9 @@ resource "null_resource" "rerun" {
     # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
       inline = [
         
-      "sh /home/ubuntu/build-api1.sh"
+      "sh /home/ubuntu/build-api1.sh",
         
-      "echo { >/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
       "echo  '  \"api2_url\":\" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
       "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
      ]
