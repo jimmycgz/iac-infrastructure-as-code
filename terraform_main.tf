@@ -198,7 +198,7 @@ resource "null_resource" "rerun" {
     user = "ubuntu"
     private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
     #private_key = "${file("${path.module}/keys/terraform")}"
-    host=    ${aws_eip.j_t_eip1.public_ip}
+    host="${aws_eip.j_t_eip1.public_ip}"
   }
   
   provisioner "remote-exec" {
