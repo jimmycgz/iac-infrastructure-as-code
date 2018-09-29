@@ -216,7 +216,7 @@ resource "null_resource" "rerun" {
         # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
         
       "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo  '  \"api2_url\":\" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  '  \"api2_url\": \" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
       "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
      ]
   }
