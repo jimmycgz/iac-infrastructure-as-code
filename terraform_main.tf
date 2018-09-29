@@ -186,7 +186,7 @@ resource "null_resource" "rerun" {
   
   provisioner "local-exec" {
   #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
-    
+  command=" echo to be test ansible "  
   }
   
       # Run remote provisioner on the instance after association of EIP to Instance1.
