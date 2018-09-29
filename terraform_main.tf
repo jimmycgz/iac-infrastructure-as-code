@@ -152,14 +152,8 @@ resource "aws_eip_association" "j_t_eip1_asso" {
 
   
   provisioner "local-exec" {
-        connection {
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
-    #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
-  }
-  
     command = "echo IP=192.168.4.1 >/home/ubuntu/local-host-ip.txt"
+    command = "echo IP=192.168.4.2 >>/home/ubuntu/local-host-ip.txt"
   }
   
       # Copies from Terraform server to the new instance
