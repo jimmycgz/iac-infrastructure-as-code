@@ -102,8 +102,8 @@ resource "aws_route_table_association" "j_t_rt_asso" {
 }
 
 resource "aws_instance" "j_t_API1-AWS" {
-  # ami                    = "ami-0d12bbc5df9d0d8c8"
-  ami                    = "ami-9526abf1"
+  ami                    = "ami-0d12bbc5df9d0d8c8"
+  #ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
@@ -212,7 +212,8 @@ resource "null_resource" "rerun" {
     # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
       inline = [
         
-      "sh /home/ubuntu/build-api1.sh",
+      #"sh /home/ubuntu/build-api1.sh",
+        # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
         
       "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
       "echo  '  \"api2_url\":\" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
