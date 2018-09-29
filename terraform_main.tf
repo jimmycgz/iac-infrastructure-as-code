@@ -150,6 +150,15 @@ resource "aws_eip_association" "j_t_eip1_asso" {
      ]
   }
   
+  # Add the new public ip (EIP1 and EIP2) to local config file
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip1.id} >/home/ubuntu/host-ip-local.txt"
+
+  }
+  
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip2.id} >>/home/ubuntu/host-ip-local.txt"
+  }
 
   
   # EIP1 association
@@ -183,12 +192,3 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 }
 
 
-  # Add the new public ip (EIP1 and EIP2) to local config file
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip1.id} >/home/ubuntu/host-ip-local.txt"
-
-  }
-  
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip2.id} >>/home/ubuntu/host-ip-local.txt"
-  }
