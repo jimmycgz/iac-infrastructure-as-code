@@ -136,10 +136,14 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   
   provisioner "remote-exec" {
     inline = [
-      "echo { >/home/ubuntu/host-ip.txt",
-      "echo IP=192.168.4.1 >>/home/ubuntu/host-ip.txt",
-      "echo } >>/home/ubuntu/host-ip.txt",
+      "echo { >/home/ubuntu/remote-host-ip.txt",
+      "echo IP=192.168.4.1 >>/home/ubuntu/remote-host-ip.txt",
+      "echo } >>/home/ubuntu/remote-host-ip.txt",
      ]
+  }
+  
+  provisioner "local-exec" {
+    command = "echo IP=192.168.4.1 >/home/ubuntu/local-host-ip.txt"
   }
   
     connection {
