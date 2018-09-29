@@ -144,26 +144,16 @@ resource "aws_eip_association" "j_t_eip1_asso" {
  
       inline = [
       "echo { >/home/ubuntu/remote-host-ip.txt",
-      "echo IP=192.168.4.1 >>/home/ubuntu/remote-host-ip.txt",
-      "echo IP=192.168.4.2 >>/home/ubuntu/remote-host-ip.txt",
+      "echo ${aws_eip.j_t_eip1.id} >>/home/ubuntu/remote-host-ip.txt",
+      "echo ${aws_eip.j_t_eip2.id} >>/home/ubuntu/remote-host-ip.txt",
       "echo } >>/home/ubuntu/remote-host-ip.txt",
      ]
   }
   
 
   
-  provisioner "local-exec" {
-    command = "echo IP=192.168.4.1 >/home/ubuntu/local-host-ip.txt"
-
-  }
-  
-  provisioner "local-exec" {
-    command = "echo IP=192.168.4.2 >>/home/ubuntu/local-host-ip.txt"
-  }
-  
   # EIP1 association
  } 
-
 
 
 resource "aws_instance" "j_t_API2" {
@@ -193,3 +183,12 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 }
 
 
+  # Add the new public ip (EIP1 and EIP2) to local config file
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip1.id} >/home/ubuntu/host-ip-local.txt"
+
+  }
+  
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.j_t_eip2.id} >>/home/ubuntu/host-ip-local.txt"
+  }
