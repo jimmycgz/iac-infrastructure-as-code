@@ -149,17 +149,7 @@ resource "aws_eip_association" "j_t_eip1_asso" {
      ]
   }
   
-    # Copies the myapp.conf file to /etc/myapp.conf
-  provisioner "file" {
-    source      = "/home/ubuntu/remote-host-ip.txt"
-    destination = "/home/ubuntu/remote-host-ip.txt"
-  }
 
-  # Copies the string in content into /tmp/file.log
-  provisioner "file" {
-    content     = "Test file provisioner to add one line in txt file"
-    destination = "/home/ubuntu/remote-host-ip.txt"
-  }
   
   provisioner "local-exec" {
         connection {
@@ -172,6 +162,17 @@ resource "aws_eip_association" "j_t_eip1_asso" {
     command = "echo IP=192.168.4.1 >/home/ubuntu/local-host-ip.txt"
   }
   
+      # Copies from Terraform server to the new instance
+  provisioner "file" {
+    source      = "/home/ubuntu/local-host-ip.txt"
+    destination = "/home/ubuntu/local-host-ip.txt"
+  }
+
+  # Copies the string in content 
+  provisioner "file" {
+    content     = "Test file provisioner to add one line in txt file"
+    destination = "/home/ubuntu/local-host-ip.txt"
+  }
 
 
   # EIP1 association
