@@ -130,12 +130,7 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   allocation_id ="${aws_eip.j_t_eip1.id}"
   
     # Run remote provisioner on the instance after association of EIP to Instance1.
-    connection {
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
-    #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
-  }
+  
   
   # Create a file for test
   
@@ -144,9 +139,16 @@ resource "aws_eip_association" "j_t_eip1_asso" {
       "echo { >/home/ubuntu/host-ip.txt",
       "echo IP=192.168.4.1 >>/home/ubuntu/host-ip.txt",
       "echo } >>/home/ubuntu/host-ip.txt",
-      
-    ]
+     ]
   }
+  
+    connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
+  }
+  
 
   # EIP1 association
  } 
