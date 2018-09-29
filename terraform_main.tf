@@ -129,27 +129,6 @@ resource "aws_eip_association" "j_t_eip1_asso" {
   instance_id="${aws_instance.j_t_API1.id}"
   allocation_id ="${aws_eip.j_t_eip1.id}"
   
-    # Run remote provisioner on the instance after association of EIP to Instance1.
-  
-  
-  # Create a file for test
-      connection {
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
-    #private_key               =  "Jmy_Key_AWS_Apr_2018.pem"
-  }
-  
-  provisioner "remote-exec" {
- 
-      inline = [
-      "echo { >/home/ubuntu/host-ip-remote.txt",
-      "echo ${aws_eip.j_t_eip1.public_ip} >>/home/ubuntu/host-ip-remote.txt",
-      "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-remote.txt",
-      "echo } >>/home/ubuntu/host-ip-remote.txt",
-     ]
-  }
-  
 
 
   
@@ -184,12 +163,12 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 }
 
 
-resource "null_resource" "ansible" {
+resource "null_resource" "rerun" {
 # Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
   # By default, Terraform only run file
   
   triggers {
-    key = "${uuid()}"
+    rerun= "${uuid()}"
   }
 
     # Add the new public ip (EIP1 and EIP2) to local config file
@@ -209,6 +188,30 @@ resource "null_resource" "ansible" {
   #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
     
   }
+  
+      # Run remote provisioner on the instance after association of EIP to Instance1.
+  
+  
+  # Create a file for test
+      connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key = "${file("${path.module}/keys/terraform")}"
+    host=    ${aws_eip.j_t_eip1.public_ip}
+  }
+  
+  provisioner "remote-exec" {
+ 
+      inline = [
+      "echo { >/home/ubuntu/host-ip-remote.txt",
+      "echo ${aws_eip.j_t_eip1.public_ip} >>/home/ubuntu/host-ip-remote.txt",
+      "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-remote.txt",
+      "echo } >>/home/ubuntu/host-ip-remote.txt",
+     ]
+  }
+  
+
   
   #resource "null_resource" "uuid-trigger
 }
