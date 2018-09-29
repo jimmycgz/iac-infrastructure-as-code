@@ -50,12 +50,20 @@
   
   Resolution: run it in "null_resource" and use uuid as trigger.
   
-  Issue found: can't bootstrap by neither remote-exec or run a .sh file in the new instance, 
+  Issue found: can't bootstrap by neither remote-exec or run a .sh file in the new instance.
+  
   Resolution: Step 4.3> [DONE!] Use my own AMI with the API pre-configured, then user Terraform remote-exec to update the ip address of API3-GCP into the Json config file of API1-AWS.
   
-  Step 4.4> try ansible for config manangement as below step.
+  Issue found: how to add a quate (") to a txt file by echo in Terraform? like  command="echo "IP_add=": >IP.txt",
+  Resolution: use the combination of (\") and (') like command="echo ' \"IP_add=\":' >IP.txt",
   
-  ** Step 4.4> [WIP] Use ansible to deploy API web service for API1-AWS, API2-AWS and connect to API3-GCP.
+  Issue found: Can't associate one IGW to multiple subnets, Terraform seems only associate it to the last one in resource IGW_asso
+  
+  ** Step [WIP] 4.4 Change API2 (GCP) to API3-GCP, correc the display name in API-AWS code.
+    Sep 29th: have created 3 folders in Repo API-DEMO, just need to futher tailor the code accordingly.
+  
+  
+  ** Step 4.5> [WIP] Use ansible to deploy API web service for API1-AWS, API2-AWS and connect to API3-GCP.
   
   * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
   
