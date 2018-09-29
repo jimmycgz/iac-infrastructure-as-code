@@ -102,8 +102,8 @@ resource "aws_route_table_association" "j_t_rt_asso" {
 }
 
 resource "aws_instance" "j_t_API1" {
-  #ami                    = "ami-0d12bbc5df9d0d8c8"
-  ami                    = "ami-9526abf1"
+  ami                    = "ami-0d12bbc5df9d0d8c8"
+  # ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
