@@ -165,7 +165,8 @@ resource "aws_eip_association" "j_t_eip2_asso" {
 
 resource "null_resource" "rerun" {
 # Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
-  # By default, Terraform only run file
+  # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
+  
   
   triggers {
     rerun= "${uuid()}"
@@ -189,9 +190,8 @@ resource "null_resource" "rerun" {
   command=" echo to be test ansible "  
   }
   
-      # Run remote provisioner on the instance after association of EIP to Instance1.
-  
-  
+ # Run remote provisioner on the instance after association of EIP to Instance1.
+    
   # Create a file for test
       connection {
     type = "ssh"
@@ -202,12 +202,11 @@ resource "null_resource" "rerun" {
   }
   
   provisioner "remote-exec" {
- 
+    # Update the ip address of API2 (GCP) to the config file on API1 (AWS Subnet1)
       inline = [
-      "echo { >/home/ubuntu/host-ip-remote.txt",
-      "echo ${aws_eip.j_t_eip1.public_ip} >>/home/ubuntu/host-ip-remote.txt",
-      "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-remote.txt",
-      "echo } >>/home/ubuntu/host-ip-remote.txt",
+      "echo { >/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  \"api2_url\": \"http://35.231.144.74:5000\" >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
      ]
   }
   
