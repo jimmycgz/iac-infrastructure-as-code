@@ -171,7 +171,7 @@ resource "aws_instance" "jt-api-aws" {
    
    content=<<-EOF
    [AWS]
-   ${aws_instance.jt-api-aws.*.public_ip}
+   ${join("\n",aws_instance.jt-api-aws.*.public_ip)}
   
    [GCP]
    
