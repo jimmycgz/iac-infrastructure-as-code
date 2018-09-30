@@ -19,53 +19,53 @@ variable "subnet_cidrs_public" {
   
   }
 
-resource "aws_vpc" "j_t_vpc" {
+resource "aws_vpc" "jt_vpc" {
   cidr_block           = "${var.vpc_cidr}"
   #instance_tenancy     = "default"
   #enable_dns_support   = true
  # enable_dns_hostnames = true
 
   tags {
-    Name = "J_T_VPC"
+    Name = "jt_VPC"
   }
 }
 
 # Create an internet gateway to give our subnets access to the outside world
-resource "aws_internet_gateway" "j_t_igw" {
-  vpc_id="${aws_vpc.j_t_vpc.id}"
+resource "aws_internet_gateway" "jt_igw" {
+  vpc_id="${aws_vpc.jt_vpc.id}"
 
-  tags {   Name="J_T_VPC_IGW"  }
+  tags {   Name="jt_VPC_IGW"  }
 
 }
 
 # Grant the VPC internet access on its main route table
-resource "aws_route" "j_t_rt_internet" {
-  route_table_id="${aws_vpc.j_t_vpc.main_route_table_id}"
+resource "aws_route" "jt_rt_internet" {
+  route_table_id="${aws_vpc.jt_vpc.main_route_table_id}"
   destination_cidr_block="0.0.0.0/0"
-  gateway_id="${aws_internet_gateway.j_t_igw.id}"
+  gateway_id="${aws_internet_gateway.jt_igw.id}"
   
-  tags {  Lable="J_T_RT" }
+  tags {  Lable="jt_RT" }
 
 }
 
-resource "aws_subnet" "j_t_pub_subnet" {
+resource "aws_subnet" "jt_pub_subnet" {
   count="${length(var.subnet_cidrs_public)}"
   
-  vpc_id     = "${aws_vpc.j_t_vpc.id}"
+  vpc_id     = "${aws_vpc.jt_vpc.id}"
   cidr_block = "${var.subnet_cidrs_public[count.index]}"
   map_public_ip_on_launch = true
   
   tags {
-    Name = "J_T_VPC_Sub"
+    Name = "jt_VPC_Sub"
   }
   
 }
 
 # A security group for the ELB so it is accessible via the web
-resource "aws_security_group" "j_t_sg_elb" {
-  name        = "j_t_sg_elb"
+resource "aws_security_group" "jt_sg_elb" {
+  name        = "jt_sg_elb"
   description = "Elb Used in the 2Tier DEMO"
-  vpc_id      = "${aws_vpc.j_t_vpc.id}"
+  vpc_id      = "${aws_vpc.jt_vpc.id}"
 
   # HTTP access from anywhere
   ingress {
@@ -86,10 +86,10 @@ resource "aws_security_group" "j_t_sg_elb" {
 
 
 # Our default security group to access the instances over SSH and HTTP
-resource "aws_security_group" "j_t_sg_demo1" {
-  name        = "j_t_sg-demo1"
+resource "aws_security_group" "jt_sg_demo1" {
+  name        = "jt_sg-demo1"
   description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
-  vpc_id      = "${aws_vpc.j_t_vpc.id}"
+  vpc_id      = "${aws_vpc.jt_vpc.id}"
   
     # HTTP access from anywhere
   ingress {
@@ -125,12 +125,12 @@ resource "aws_security_group" "j_t_sg_demo1" {
   }
 }
 
-resource "aws_elb" "j_t_demo_elb" {
-  name = "j_t_demo_elb"
+resource "aws_elb" "jt-elb" {
+  name = "jt_demo_elb"
 
-  subnets         = ["${aws_subnet.j_t_pub_subnet.id}"]
-  security_groups = ["${aws_security_group.j_t_sg_elb.id}"]
-  instances       = ["${aws_instance.j_t_api-aws.id}"]
+  subnets         = ["${aws_subnet.jt_pub_subnet.id}"]
+  security_groups = ["${aws_security_group.jt_sg_elb.id}"]
+  instances       = ["${aws_instance.jt_api-aws.id}"]
 
   listener {
     instance_port     = 80
@@ -141,7 +141,7 @@ resource "aws_elb" "j_t_demo_elb" {
 }
 
 
-resource "aws_instance" "j_t_api-aws" {
+resource "aws_instance" "jt_api-aws" {
   count="${length(var.subnet_cidrs_public)}"
   
   #ami                    = "ami-0d12bbc5df9d0d8c8"
@@ -149,12 +149,12 @@ resource "aws_instance" "j_t_api-aws" {
 
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
+  vpc_security_group_ids = ["${aws_security_group.jt_sg_demo1.id}"]
   
-  subnet_id ="${element(aws_subnet.j_t_pub_subnet.*.id, count.index)}"
-  #subnet_id              = "${aws_subnet.j_t_subnet1.id}"
+  subnet_id ="${element(aws_subnet.jt_pub_subnet.*.id, count.index)}"
+  #subnet_id              = "${aws_subnet.jt_subnet1.id}"
   
   tags = {
-    Name = "j_t_api-aws"
+    Name = "jt_api-aws"
   }
 }
