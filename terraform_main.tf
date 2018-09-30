@@ -44,7 +44,7 @@ resource "aws_route" "jt-rt-internet" {
   destination_cidr_block="0.0.0.0/0"
   gateway_id="${aws_internet_gateway.jt_igw.id}"
   
-  tags {  Lable="jt_rt_internet" }
+  tags { Name="jt_rt_internet" }
 
 }
 
