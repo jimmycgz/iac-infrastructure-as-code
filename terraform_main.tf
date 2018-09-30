@@ -156,6 +156,6 @@ resource "aws_instance" "jt_api-aws" {
   
   tags = {
     #Name = "jt_api-aws"
-    Name = “${format(“jt_api-aws-%03d”, count.index + 1)}”
+    Name = "${format("jt_api-aws-%03d", count.index + 1)}"
   }
 }
