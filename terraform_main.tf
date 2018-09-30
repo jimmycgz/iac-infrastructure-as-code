@@ -130,7 +130,7 @@ resource "aws_elb" "j_t_demo_elb" {
 
   subnets         = ["${aws_subnet.j_t_pub_subnet.id}"]
   security_groups = ["${aws_security_group.j_t_sg_elb.id}"]
-  instances       = ["${aws_instance.J_T_API-AWS.id}"]
+  instances       = ["${aws_instance.j_t_api-aws.id}"]
 
   listener {
     instance_port     = 80
@@ -155,6 +155,6 @@ resource "aws_instance" "j_t_api-aws" {
   #subnet_id              = "${aws_subnet.j_t_subnet1.id}"
   
   tags = {
-    Name = "J_T_API-AWS"
+    Name = "j_t_api-aws"
   }
 }
