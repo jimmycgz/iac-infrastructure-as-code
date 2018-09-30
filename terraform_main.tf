@@ -137,10 +137,6 @@ resource "aws_eip_association" "j_t_eip1_asso" {
 
 
   
-  # EIP1 association
- } 
-
-
 resource "aws_instance" "j_t_API2-AWS" {
   ami                    = "ami-9526abf1"
   instance_type          = "t2.micro"
