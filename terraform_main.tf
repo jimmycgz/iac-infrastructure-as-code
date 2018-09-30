@@ -39,7 +39,7 @@ resource "aws_internet_gateway" "jt_igw" {
 }
 
 # Grant the VPC internet access on its main route table
-resource "aws_route" "jt-rt-internet" {
+resource "aws_route" "jt_rt_internet" {
   route_table_id="${aws_vpc.jt_vpc.main_route_table_id}"
   destination_cidr_block="0.0.0.0/0"
   gateway_id="${aws_internet_gateway.jt_igw.id}"
