@@ -26,7 +26,7 @@ resource "aws_vpc" "jt_vpc" {
  # enable_dns_hostnames = true
 
   tags {
-    Name = "jt_VPC"
+    Name = "jt_vpc"
   }
 }
 
@@ -34,17 +34,17 @@ resource "aws_vpc" "jt_vpc" {
 resource "aws_internet_gateway" "jt_igw" {
   vpc_id="${aws_vpc.jt_vpc.id}"
 
-  tags {   Name="jt_VPC_IGW"  }
+  tags {   Name="jt_igw"  }
 
 }
 
 # Grant the VPC internet access on its main route table
-resource "aws_route" "jt_rt_internet" {
+resource "aws_route" "jt-rt-internet" {
   route_table_id="${aws_vpc.jt_vpc.main_route_table_id}"
   destination_cidr_block="0.0.0.0/0"
   gateway_id="${aws_internet_gateway.jt_igw.id}"
   
-  tags {  Lable="jt_RT" }
+  tags {  Lable="jt_rt_internet" }
 
 }
 
@@ -126,7 +126,7 @@ resource "aws_security_group" "jt_sg_demo1" {
 }
 
 resource "aws_elb" "jt-elb" {
-  name = "jt_demo_elb"
+  name = "jt-demo-elb"
 
   subnets         = ["${aws_subnet.jt_pub_subnet.id}"]
   security_groups = ["${aws_security_group.jt_sg_elb.id}"]
