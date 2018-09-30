@@ -166,7 +166,7 @@ resource "null_resource" "rerun" {
   provisioner "local-exec" {
      count="${length(var.subnet_cidrs_public)}"
     
-    command = "echo ${element(aws_instance.j_t_API-AWS.*.public_ip, count.index)}" >>/home/ubuntu/host-ip-local.txt"
+    command = "echo '${element(aws_instance.j_t_API-AWS.*.public_ip, count.index)}'" >>/home/ubuntu/host-ip-local.txt"
 
   }
   
