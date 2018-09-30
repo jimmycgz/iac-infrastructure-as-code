@@ -128,7 +128,7 @@ resource "aws_elb" "jt-elb" {
 
   subnets         = ["${aws_subnet.jt_pub_subnet.id}"]
   security_groups = ["${aws_security_group.jt_sg_elb.id}"]
-  instances       = ["${aws_instance.jt_api-aws.id}"]
+  instances       = ["${aws_instance.jt_api-aws.*.id}"]
 
   listener {
     instance_port     = 80
