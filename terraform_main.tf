@@ -54,7 +54,8 @@ resource "aws_subnet" "jt_pub_subnet" {
   map_public_ip_on_launch = true
   
   tags {
-    Name = "jt_VPC_Sub"
+    #Name = "jt_vpc_subnet"
+    Name = “${format(“jt_vpc_subnet-%03d”, count.index + 1)}”
   }
   
 }
@@ -126,8 +127,9 @@ resource "aws_security_group" "jt_sg_demo1" {
 resource "aws_elb" "jt-elb" {
   name = "jt-demo-elb"
 
-  subnets         = ["${aws_subnet.jt_pub_subnet.*.id}"]
+  #subnets         = ["${aws_subnet.jt_pub_subnet.*.id}"]
   security_groups = ["${aws_security_group.jt_sg_elb.id}"]
+  availability_zones = ["${data.aws_availability_zones.all.names}"]
   instances       = ["${aws_instance.jt_api-aws.*.id}"]
 
   listener {
@@ -153,6 +155,7 @@ resource "aws_instance" "jt_api-aws" {
   #subnet_id              = "${aws_subnet.jt_subnet1.id}"
   
   tags = {
-    Name = "jt_api-aws"
+    #Name = "jt_api-aws"
+    Name = “${format(“jt_api-aws-%03d”, count.index + 1)}”
   }
 }
