@@ -11,7 +11,7 @@ variable "vpc_cidr" {
 
 variable "subnet_cidrs_public" {
   # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
-  default = ["172.17.0.0/24", "172.17.1.0/24"]
+  default = ["172.17.0.0/24", "172.17.1.0/24", "172.17.2.0/24"]
   type = "list"
   
   }
