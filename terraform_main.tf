@@ -5,8 +5,19 @@ provider "aws" {
   region = "ca-central-1"
 }
 
+variable "vpc_cidr" {
+  default="172.17.0.0/16"
+  }
+
+variable "subnet_cidrs_public" {
+  # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
+  default = ["172.17.0.0/24", "172.17.1.0/24"]
+  type = "list"
+  
+  }
+
 resource "aws_vpc" "j_t_vpc" {
-  cidr_block           = "172.17.0.0/16"
+  cidr_block           = "${var.vpc_cidr}"
   instance_tenancy     = "default"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -16,22 +27,45 @@ resource "aws_vpc" "j_t_vpc" {
   }
 }
 
-resource "aws_subnet" "j_t_subnet1" {
+resource "aws_subnet" "j_t_pub_subnet" {
+  count="${length(var.subnet_cidrs_public)}"
+  
   vpc_id     = "${aws_vpc.j_t_vpc.id}"
-  cidr_block = "172.17.0.0/24"
+  cidr_block = "${var.subnet_cidrs_public[count.index]}"
 
   tags {
-    Name = "J_T_VPC_Sub1"
+    Name = "J_T_VPC_Sub"
   }
 }
 
-resource "aws_subnet" "j_t_subnet2" {
-  vpc_id     = "${aws_vpc.j_t_vpc.id}"
-  cidr_block = "172.17.1.0/24"
+resource "aws_internet_gateway" "j_t_igw" {
+  vpc_id="${aws_vpc.j_t_vpc.id}"
 
   tags {
-    Name = "J_T_VPC_Sub2"
+   Name="J_T_VPC_IGW"
   }
+
+}
+
+resource "aws_route_table" "j_t_public_rt_table" {
+vpc_id="${aws_vpc.j_t_vpc.id}"
+
+route {
+  cidr_block ="0.0.0.0/0"
+  gateway_id="${aws_internet_gateway.j_t_igw.id}"
+}
+
+  tags {  Lable="J_T_RT"}
+
+}
+
+
+resource "aws_route_table_association" "j_t_rt_asso" {
+  count="${length(var.subnet_cidrs_public)}"
+  
+  subnet_id ="${element(aws_subnet.j_t_pub_subnet.*.id, count.index)}"
+#  subnet_id ="${aws_subnet.j_t_subnet1.id}"
+  route_table_id="${aws_route_table.j_t_public_rt_table.id}"
 }
 
 resource "aws_security_group" "j_t_sg_demo1" {
@@ -73,53 +107,28 @@ resource "aws_security_group" "j_t_sg_demo1" {
   }
 }
 
-resource "aws_internet_gateway" "j_t_igw" {
-  vpc_id="${aws_vpc.j_t_vpc.id}"
 
-  tags {
-   Name="J_T_VPC_IGW"
-  }
-
-}
-
-resource "aws_route_table" "j_t_public_rt_table" {
-vpc_id="${aws_vpc.j_t_vpc.id}"
-
-route {
-  cidr_block ="0.0.0.0/0"
-  gateway_id="${aws_internet_gateway.j_t_igw.id}"
-}
-
-  tags {  Lable="J_T_RT"}
-
-}
-
-
-resource "aws_route_table_association" "j_t_rt_asso" {
-  subnet_id ="${aws_subnet.j_t_subnet2.id}"
-  subnet_id ="${aws_subnet.j_t_subnet1.id}"
-  route_table_id="${aws_route_table.j_t_public_rt_table.id}"
-}
-
-
-resource "aws_instance" "j_t_API1-AWS" {
-  ami                    = "ami-0d12bbc5df9d0d8c8"
-  #ami                    = "ami-9526abf1"
+resource "aws_instance" "j_t_API-AWS" {
+  count="${length(var.subnet_cidrs_public)}"
+  
+  #ami                    = "ami-0d12bbc5df9d0d8c8"
+  ami                    = "ami-9526abf1"
 
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
-  subnet_id              = "${aws_subnet.j_t_subnet1.id}"
   
-
+  subnet_id ="${element(aws_subnet.j_t_pub_subnet.*.id, count.index)}"
+  #subnet_id              = "${aws_subnet.j_t_subnet1.id}"
   
-
   tags = {
     Name = "J_T_API1-AWS"
   }
 }
 
-resource "aws_eip" "j_t_eip1" {
+resource "aws_eip" "j_t_eip" {
+  count="${length(var.subnet_cidrs_public)}"
+  
   vpc      = true
 
   tags {
@@ -127,41 +136,14 @@ resource "aws_eip" "j_t_eip1" {
   }
 }
 
-resource "aws_eip_association" "j_t_eip1_asso" {
-  instance_id="${aws_instance.j_t_API1-AWS.id}"
-  allocation_id ="${aws_eip.j_t_eip1.id}"
+resource "aws_eip_association" "j_t_eip_asso" {
+  count="${length(var.subnet_cidrs_public)}"
   
-  
+  instance_id="${element(aws_instance.j_t_API-AWS.*.id, count.index)}"
+  allocation_id ="${element(aws_eip.j_t_eip.*.id, count.index)}"
+ 
   # EIP1 association
  } 
-
-
-  
-resource "aws_instance" "j_t_API2-AWS" {
-  ami                    = "ami-9526abf1"
-  instance_type          = "t2.micro"
-  key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
-  subnet_id              = "${aws_subnet.j_t_subnet2.id}"
-
-  tags = {
-    Name = "J_T_API2-AWS"
-  }
-  
-}
-
-resource "aws_eip" "j_t_eip2" {
-  vpc      = true
-
-  tags {
-    Name = "J_T_Eip2"
-  }
-}
-
-resource "aws_eip_association" "j_t_eip2_asso" {
-  instance_id="${aws_instance.j_t_API2-AWS.id}"
-  allocation_id ="${aws_eip.j_t_eip2.id}"
-}
 
 
 resource "null_resource" "rerun" {
@@ -174,21 +156,27 @@ resource "null_resource" "rerun" {
   }
 
     # Add the new public ip (EIP1 and EIP2) to local config file
+
   provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip1.public_ip} >/home/ubuntu/host-ip-local.txt"
+     
+    command = "touch /home/ubuntu/host-ip-local.txt"
+
+  }
+
+  provisioner "local-exec" {
+     count="${length(var.subnet_cidrs_public)}"
+    
+    command = "echo ${element(aws_instance.j_t_API-AWS.*.public_ip, count.index)}" >>/home/ubuntu/host-ip-local.txt"
 
   }
   
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-local.txt"
- #   command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
- 
-  }
-    
+  
   
   provisioner "local-exec" {
+
   #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
   command=" echo to be test ansible "  
+
   }
   
 
