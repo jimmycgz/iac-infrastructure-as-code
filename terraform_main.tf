@@ -164,3 +164,64 @@ resource "aws_instance" "jt-api-aws" {
     Name = "${format("jt-api-aws-%03d", count.index + 1)}"
   }
 }
+
+resource "null_resource" "rerun" {
+# Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
+  # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
+  
+  
+  triggers {
+    rerun= "${uuid()}"
+  }
+
+    # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.jt-api-aws.*.public_ip} >>/home/ubuntu/host-ip-local.txt"
+    
+  }
+  
+  provisioner "local-exec" {
+  #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+  command=" echo to be test ansible "  
+  }
+  
+
+ # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
+    
+  # Add the ip of API3-GCP to API1-AWS config file
+
+    connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key = "${file("${path.module}/keys/terraform")}"
+    host="${aws_instance.jt-api-aws.1.public_ip}"
+  }
+ 
+ # Bootstrape API2-AWS from a bare new AWS ami
+ # Copies the myapp.conf file to /etc/myapp.conf
+  provisioner "file" {
+    source      = "/home/ubuntu/build-api1.sh"
+    destination = "/home/ubuntu/build-api1.sh"
+  }
+  
+  provisioner "remote-exec" {
+    # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
+      inline = [
+        
+      #"sh /home/ubuntu/build-api1.sh",
+        # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
+        
+      "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo  '  \"api2_url\": \" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+
+      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+     ]
+  }
+  
+
+   
+
+  #resource "null_resource" "uuid-trigger
+}
+
