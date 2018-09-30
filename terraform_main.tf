@@ -131,9 +131,9 @@ resource "aws_security_group" "jt_sg_demo1" {
 resource "aws_elb" "jt-elb" {
   name = "jt-demo-elb"
 
-  #subnets         = ["${aws_subnet.jt_pub_subnet.*.id}"]
+  subnets         = ["${aws_subnet.jt_pub_subnet.*.id}"]
   security_groups = ["${aws_security_group.jt_sg_elb.id}"]
-  availability_zones = ["${data.aws_availability_zones.available.names}"]
+  #availability_zones = ["${data.aws_availability_zones.available.names}"]
   instances       = ["${aws_instance.jt_api-aws.*.id}"]
 
   listener {
