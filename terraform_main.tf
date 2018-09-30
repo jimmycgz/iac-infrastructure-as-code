@@ -165,15 +165,6 @@ resource "aws_instance" "jt-api-aws" {
   }
 }
 
-resource "null_resource" "rerun" {
-# Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
-  # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
-  
-  
-  triggers {
-    rerun= "${uuid()}"
-  }
-
     # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
  resource "local_file" "host-ip-inventory" {
    filename="/home/ubuntu/host-ip-local.txt"
@@ -186,6 +177,17 @@ resource "null_resource" "rerun" {
    
    EOF
   }
+
+resource "null_resource" "rerun" {
+# Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
+  # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
+  
+  
+  triggers {
+    rerun= "${uuid()}"
+  }
+
+
    
   
   provisioner "local-exec" {
