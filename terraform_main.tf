@@ -126,7 +126,7 @@ resource "aws_security_group" "j_t_sg_demo1" {
 }
 
 resource "aws_elb" "j_t_demo_elb" {
-  name = "J_T_Demo_elb"
+  name = "j_t_demo_elb"
 
   subnets         = ["${aws_subnet.j_t_pub_subnet.id}"]
   security_groups = ["${aws_security_group.j_t_sg_elb.id}"]
@@ -141,7 +141,7 @@ resource "aws_elb" "j_t_demo_elb" {
 }
 
 
-resource "aws_instance" "J_T_API-AWS" {
+resource "aws_instance" "j_t_api-aws" {
   count="${length(var.subnet_cidrs_public)}"
   
   #ami                    = "ami-0d12bbc5df9d0d8c8"
