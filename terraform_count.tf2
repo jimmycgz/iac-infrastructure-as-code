@@ -1,4 +1,5 @@
-# use count and index create 2 subnets,  2 VM on each subnet with associated 2 eips.
+# use count and index create 2 subnets,  2 VMs on each subnet with associated 2 eips.
+# exten the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 17 in variable subnet_cidrs_public)
 
 provider "aws" {
   shared_credentials_file = "/home/ubuntu/.aws/credentials"
