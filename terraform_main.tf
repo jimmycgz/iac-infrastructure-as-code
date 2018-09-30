@@ -175,11 +175,18 @@ resource "null_resource" "rerun" {
   }
 
     # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
-  provisioner "local-exec" {
-    count="${length(var.subnet_cidrs_public)}"
-    command = "echo '${aws_instance.jt-api-aws.[count.index].public_ip}' >>/home/ubuntu/host-ip-local.txt"
-    
+ resource "local_file" "host-ip-inventory" {
+   filename="/home/ubuntu/host-ip-local.txt"
+   
+   content=<<-EOF
+   [AWS]
+   ${aws_instance.jt-api-aws.*.public_ip}
+  
+   [GCP]
+   
+   EOF
   }
+   
   
   provisioner "local-exec" {
   #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
@@ -188,7 +195,9 @@ resource "null_resource" "rerun" {
   
 
  # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
-    
+ # Could also try this way: run below user_data line before connection section.
+  # user_data = "${file("terraform/attach_ebs.sh")}"   
+  
   # Add the ip of API3-GCP to API1-AWS config file
 
     connection {
