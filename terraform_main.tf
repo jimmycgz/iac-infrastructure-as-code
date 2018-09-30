@@ -176,7 +176,7 @@ resource "null_resource" "rerun" {
 
     # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
   provisioner "local-exec" {
-    command = "echo ${aws_instance.jt-api-aws.*.public_ip} >>/home/ubuntu/host-ip-local.txt"
+    command = "echo '${aws_instance.jt-api-aws.*.public_ip}' >>/home/ubuntu/host-ip-local.txt"
     
   }
   
