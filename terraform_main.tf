@@ -62,7 +62,7 @@ resource "aws_subnet" "jt-pub_subnet" {
   
   vpc_id     = "${aws_vpc.jt-vpc.id}"
   cidr_block = "${var.subnet_cidrs_public[count.index]}"
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  availability_zone = "${data.aws_availability_zones.available.names[0,1]}"
   map_public_ip_on_launch = true
   
   tags {
