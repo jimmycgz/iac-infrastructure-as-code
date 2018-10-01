@@ -96,6 +96,10 @@ resource "aws_security_group" "jt-sg-alb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
+  tags {
+    Name= "jt-sg-alb"
+    }
 }
 
 
@@ -140,14 +144,20 @@ resource "aws_security_group" "jt-sg_demo1" {
 }
 
 
-resource "aws_lb_target_group" "jt-alb-tg" {
+resource "aws_alb_target_group" "jt-alb-tg" {
   name     = "jt-alb-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.jt-vpc.id}"
+  
+  health_check {
+    path="/login"
+    port=80
+    
+    }
 }
 
-resource "aws_lb" "jt-alb" {
+resource "aws_alb" "jt-alb" {
   name               = "jt-alb"
   internal           = false
   load_balancer_type = "application"
@@ -164,6 +174,16 @@ resource "aws_lb" "jt-alb" {
   }
 }
 
+resource "aws_alb_listener" "jt-listener-http" {
+  load_balancer_arn="${aws_alb.jt-alb.arn}"
+  port ="80"
+  protocol="HTTP"
+  
+  default_action {
+    target_group_arn= "${aws_lab_target_group.jt-alb-tg.arn}"
+    type ="forward"
+    }
+  }
 
 resource "aws_instance" "jt-api-aws" {
   count="${length(var.subnet_cidrs_public)}"
