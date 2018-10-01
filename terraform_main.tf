@@ -22,7 +22,7 @@ variable "vpc_cidr" {
 
 variable "subnet_cidrs_public" {
   # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
-  default = ["172.17.0.0/24", "172.17.1.0/24", "172.17.2.0/24"]
+  default = ["172.17.1.0/24", "172.17.2.0/24", "172.17.3.0/24"]
   type = "list"
   
   }
@@ -62,7 +62,8 @@ resource "aws_subnet" "jt-pub_subnet" {
   
   vpc_id     = "${aws_vpc.jt-vpc.id}"
   cidr_block = "${var.subnet_cidrs_public[count.index]}"
-  availability_zone = "${data.aws_availability_zones.available.names[0,1]}"
+  availability_zone = "${element(data.aws_availability_zones.available.names, count.index)}"
+    
   map_public_ip_on_launch = true
   
   tags {
