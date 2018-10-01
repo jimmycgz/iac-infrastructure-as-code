@@ -101,7 +101,7 @@ resource "aws_security_group" "jt-sg_elb" {
 resource "aws_security_group" "jt-sg_demo1" {
   name        = "jt-sg-demo1"
   description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
-  vpc_id      = "${aws_vpc.jt-vpc.id}"
+  vpc_id      = "${aws_vpc.jt-alb-tg.id}"
   
     # HTTP access from anywhere
   ingress {
@@ -137,20 +137,28 @@ resource "aws_security_group" "jt-sg_demo1" {
   }
 }
 
-resource "aws_elb" "jt-elb" {
-  name = "jt-demo-elb"
 
+resource "aws_lb_target_group" "jt-alb-tg" {
+  name     = "jt-alb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "${aws_vpc.jt-vpc.id}"
+}
+
+resource "aws_lb" "jt-alb" {
+  name               = "jt-alb"
+  internal           = false
+  load_balancer_type = "application"
+  
   #Associate the elb to the instances in the first 2 subnets
   subnets         = ["${list(aws_subnet.jt-pub_subnet.0.id, aws_subnet.jt-pub_subnet.1.id)}"]
   security_groups = ["${aws_security_group.jt-sg_elb.id}"]
-  #availability_zones = ["${data.aws_availability_zones.available.names}"]
-  instances       = ["${list(aws_instance.jt-api-aws.0.id, aws_instance.jt-api-aws.1.id)}"]
+  
+  enable_deletion_protection = true
 
-  listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
+
+  tags {
+    Environment = "production"
   }
 }
 
