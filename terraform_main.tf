@@ -180,7 +180,7 @@ resource "aws_alb_listener" "jt-listener-http" {
   protocol="HTTP"
   
   default_action {
-    target_group_arn= "${aws_lab_target_group.jt-alb-tg.arn}"
+    target_group_arn= "${aws_alb_target_group.jt-alb-tg.arn}"
     type ="forward"
     }
   }
