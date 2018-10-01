@@ -185,9 +185,9 @@ EOF
    filename="/home/ubuntu/config.json"
    
    content=<<-EOF
-'{'
+      "{"
   "api2_url": "http://35.231.144.74:5000"
-'}'
+"}"
 
 EOF
 
