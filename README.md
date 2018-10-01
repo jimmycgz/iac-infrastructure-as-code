@@ -87,6 +87,9 @@
    
   
 # Ansible Script for Pull Deployment
+
+    *ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+
     *ansible gcp_web_prod -a "sudo reboot"
 
 Reboot each instance via ansible playbook to auto deploy by this script. All instances are pre-configured startup script to pull the latest release code from a registry say AWS S3 bucket or ECR. Such startup script can be configured in Linux CLI: 
