@@ -1,4 +1,5 @@
 ---
+#sudo ansible-playbook ansible_web.yml --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem
 - hosts: AWS
   vars:
     http_port: 80
