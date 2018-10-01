@@ -166,7 +166,7 @@ resource "aws_alb" "jt-alb" {
   subnets         = ["${list(aws_subnet.jt-pub_subnet.0.id, aws_subnet.jt-pub_subnet.1.id)}"]
   security_groups = ["${aws_security_group.jt-sg-alb.id}"]
   
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 
 
   tags {
