@@ -92,7 +92,7 @@
 
  Assume the file hosts has the updated host ip list from Terraform
   
-      *sudo ansible-playbook ansible_web.yml --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem
+      *sudo ansible-playbook ansible-web.yml --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem
 
  -i specifies the ip host file, no need to use -u if already specified the login user name in yml
  
