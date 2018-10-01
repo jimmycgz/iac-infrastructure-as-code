@@ -180,21 +180,6 @@ EOF
   #End of local_file
   }
 
-    # Update Json config file (IP of Google VM) in local and then copy it to the new created instance 1 (like AWS-001) 
- resource "local_file" "inventory-json-config" {
-   filename="/home/ubuntu/config.json"
-   
-   content=<<-EOF
-      "{"
-          \"api2_url\": \"http://35.231.144.74:5000\"
-"}"
-
-EOF
-
-  #End of local_file
-  }
-
-
 resource "null_resource" "rerun" {
 # Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
   # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
