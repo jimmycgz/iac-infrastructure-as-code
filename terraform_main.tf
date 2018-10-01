@@ -141,10 +141,10 @@ resource "aws_elb" "jt-elb" {
   name = "jt-demo-elb"
 
   #Associate the elb to the instances in the first 2 subnets
-  subnets         = ["${list(aws_subnet.jt-pub_subnet.0.id, aws_subnet.jt-pub_subnet.1.id}"]
+  subnets         = ["${list(aws_subnet.jt-pub_subnet.0.id, aws_subnet.jt-pub_subnet.1.id)}"]
   security_groups = ["${aws_security_group.jt-sg_elb.id}"]
   #availability_zones = ["${data.aws_availability_zones.available.names}"]
-  instances       = ["${list(aws_instance.jt-api-aws.0.id, aws_instance.jt-api-aws.1.id}"]
+  instances       = ["${list(aws_instance.jt-api-aws.0.id, aws_instance.jt-api-aws.1.id)}"]
 
   listener {
     instance_port     = 80
