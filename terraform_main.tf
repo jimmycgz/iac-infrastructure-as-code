@@ -235,5 +235,7 @@ resource "null_resource" "rerun" {
   }
  
 
-  #resource "null_resource" "uuid-trigger
-}
+  #resource "null_resource" uuid-trigger
+  }
+
+
