@@ -54,16 +54,6 @@ resource "aws_route" "jt-rt_internet" {
   
 }
 
-#Create NAT gateway and associate the subnets
-resource "aws_nat_gateway" "gw" {
-depends_on = ["aws_internet_gateway.jt-igw"]
-
-  tags {
-    Name = "gw NAT"
-  }
-}
-
-
 # Declare the data source
 data "aws_availability_zones" "available" {}
 
