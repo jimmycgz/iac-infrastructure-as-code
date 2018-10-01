@@ -2,6 +2,10 @@
 # Task2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
 # Task2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
 # Task2-2: Copy two files from local server to the first new VM 
+# Task2-3: Save the Public IPs of all new VMs to hosts for ansible
+  #sudo ansible AWS -m ping --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
+  #sudo ansible AWS -a "echo test" --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
+
 
 # More: Create ELB and distribute the traffic to those VMs.
 
