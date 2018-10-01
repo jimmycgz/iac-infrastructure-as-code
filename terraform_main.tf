@@ -179,4 +179,63 @@ ${join("\n",aws_instance.jt-api-aws.*.public_ip)}
 
   #End of local_file
   }
+  
+ 
+resource "null_resource" "rerun" {
+# Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
+  # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
+  
+  
+  triggers {
+    rerun= "${uuid()}"
+  }
+
+
+  provisioner "local-exec" {
+  #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+  command=" echo to be test ansible "  
+  }
+  
+
+ # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
+ # Could also try this way: run below user_data line before connection section.
+  # user_data = "${file("terraform/attach_ebs.sh")}"   
+  
+  # Add the ip of API3-GCP to API1-AWS config file
+
+    connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
+    #private_key = "${file("${path.module}/keys/terraform")}"
+    host="${aws_instance.jt-api-aws.1.public_ip}"
+  }
+ 
+ # Bootstrape the new VM from a bare new AWS ami
+ # Copies the script file to new VM
+  provisioner "file" {
+    source      = "/home/ubuntu/build-api1.sh"
+    destination = "/home/ubuntu/build-api1.sh"
+  }
+  
+  # Copies the json config file to the API project folder in new VM, so it can connect with the Google VM
+  provisioner "file" {
+    source      = "/home/ubuntu/config.json"
+    destination = "/home/ubuntu/config.json"
+  }
+  
+  provisioner "remote-exec" {
+    # Update the ip address of API3-GCP to the config file on API1 (AWS Subnet1)
+      inline = [
+        
+      #"sh /home/ubuntu/build-api1.sh",
+        # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
+      echo "Run multiple lines command here",  
+      
+     ]
+  }
+ 
+
+  #resource "null_resource" uuid-trigger
+  }
 
