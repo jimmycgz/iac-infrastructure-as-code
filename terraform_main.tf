@@ -156,8 +156,8 @@ resource "aws_elb" "jt-elb" {
 resource "aws_instance" "jt-api-aws" {
   count="${length(var.subnet_cidrs_public)}"
   
-  ami                    = "ami-0456bbbb298bed46e"
-  # Baked from V4 tool server, has refined API1 service connected with API3-GCP
+  ami                    = "ami-0195d18cfe8f286d3"
+  # Baked from V4 tool server, has refined API1 service connected with API3-GCP on port 3000, also has DEMO web on 80
   #ami                    = "ami-9526abf1"
 
   instance_type          = "t2.micro"
