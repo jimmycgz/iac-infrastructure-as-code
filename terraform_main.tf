@@ -68,7 +68,7 @@ resource "aws_subnet" "jt-pub_subnet" {
   
   tags {
     #Name = "jt-vpc_subnet"
-    Name = "${format("jt-vpc_subnet-%d", count.index + 1)}"
+    Name = "${format("jt-vpc_subnet-%d", count.index+1)}"
   }
   
 }
