@@ -208,7 +208,7 @@ resource "null_resource" "rerun" {
     user = "ubuntu"
     private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
     #private_key = "${file("${path.module}/keys/terraform")}"
-    host="${aws_instance.jt-api-aws.1.public_ip}"
+    host="${aws_instance.jt-api-aws.0.public_ip}"
   }
  
  # Bootstrape the new VM from a bare new AWS ami
