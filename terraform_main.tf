@@ -54,6 +54,18 @@ resource "aws_route" "jt-rt_internet" {
   
 }
 
+#Create NAT gateway and associate the subnets
+resource "aws_nat_gateway" "gw" {
+  allocation_id = "${aws_eip.nat.id}"
+  subnet_id         = "${aws_subnet.jt-pub_subnet.*.id}"
+  #subnet_id     = "${aws_subnet.public.id}"
+
+  tags {
+    Name = "gw NAT"
+  }
+}
+
+
 # Declare the data source
 data "aws_availability_zones" "available" {}
 
