@@ -156,8 +156,9 @@ resource "aws_elb" "jt-elb" {
 resource "aws_instance" "jt-api-aws" {
   count="${length(var.subnet_cidrs_public)}"
   
-  #ami                    = "ami-0d12bbc5df9d0d8c8"
-  ami                    = "ami-9526abf1"
+  ami                    = "ami-0456bbbb298bed46e"
+  # Baked from V4 tool server, has refined API1 service connected with API3-GCP
+  #ami                    = "ami-9526abf1"
 
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
