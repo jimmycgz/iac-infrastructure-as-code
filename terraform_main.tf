@@ -166,17 +166,34 @@ resource "aws_instance" "jt-api-aws" {
 }
 
     # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
- resource "local_file" "host-ip-inventory" {
+ resource "local_file" "inventory-ip-list" {
    filename="/home/ubuntu/host-ip-local.txt"
    
    content=<<-EOF
-   [AWS]
-   ${join("\n",aws_instance.jt-api-aws.*.public_ip)}
+[AWS]
+${join("\n",aws_instance.jt-api-aws.*.public_ip)}
   
-   [GCP]
+[GCP]
    
-   EOF
+EOF
+
+  #End of local_file
   }
+
+    # Update Json config file (IP of Google VM) in local and then copy it to the new created instance 1 (like AWS-001) 
+ resource "local_file" "inventory-json-config" {
+   filename="/home/ubuntu/config.json"
+   
+   content=<<-EOF
+{
+  "api2_url": "http://35.231.144.74:5000"
+}
+
+EOF
+
+  #End of local_file
+  }
+
 
 resource "null_resource" "rerun" {
 # Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
@@ -188,8 +205,6 @@ resource "null_resource" "rerun" {
   }
 
 
-   
-  
   provisioner "local-exec" {
   #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
   command=" echo to be test ansible "  
@@ -210,11 +225,17 @@ resource "null_resource" "rerun" {
     host="${aws_instance.jt-api-aws.1.public_ip}"
   }
  
- # Bootstrape API2-AWS from a bare new AWS ami
- # Copies the myapp.conf file to /etc/myapp.conf
+ # Bootstrape the new VM from a bare new AWS ami
+ # Copies the script file to new VM
   provisioner "file" {
     source      = "/home/ubuntu/build-api1.sh"
     destination = "/home/ubuntu/build-api1.sh"
+  }
+  
+  # Copies the json config file to the API project folder in new VM, so it can connect with the Google VM
+  provisioner "file" {
+    source      = "/home/ubuntu/config.json"
+    destination = "/home/ubuntu/config.json"
   }
   
   provisioner "remote-exec" {
@@ -223,16 +244,12 @@ resource "null_resource" "rerun" {
         
       #"sh /home/ubuntu/build-api1.sh",
         # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
-        
-      "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo  '  \"api2_url\": \" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-
-      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      echo "Run multiple CLIs here",  
+      
      ]
   }
   
 
-   
 
   #resource "null_resource" "uuid-trigger
 }
