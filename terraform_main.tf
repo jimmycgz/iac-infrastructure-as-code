@@ -230,7 +230,7 @@ resource "null_resource" "rerun" {
         
       #"sh /home/ubuntu/build-api1.sh",
         # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
-      echo "Run multiple lines command here",  
+      "echo 'Run multiple lines command here'",  
       
      ]
   }
