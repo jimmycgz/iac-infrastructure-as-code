@@ -1,5 +1,8 @@
-# 1st try: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
-# 2nd try: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
+# Task1: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
+# Task2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
+# Task2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
+# Task2-2: Copy two files from local server to the first new VM 
+
 # More: Create ELB and distribute the traffic to those VMs.
 
 provider "aws" {
