@@ -86,9 +86,14 @@
    https://github.com/OSSCanada/portal-and-cloudshell/blob/master/main.tf
    
   
-# Ansible Script for Pull Deployment
+ Ansible Script for Pull Deployment
+    *sudo ansible AWS -a "echo test" --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
 
-    *ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+ Assume the file hosts has the updated host ip list from Terraform
+    *sudo ansible-playbook ansible_web.yml --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem
+
+ -i specifies the ip host file, no need to use -u if already specified the login user name in yml
+    *ansible-playbook -i /usr/local/bin/terraform-inventory playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
 
     *ansible gcp_web_prod -a "sudo reboot"
 
