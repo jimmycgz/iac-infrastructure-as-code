@@ -165,19 +165,4 @@ resource "aws_instance" "jt-api-aws" {
   }
 }
 
-    # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
- resource "local_file" "inventory-ip-list" {
-   filename="/home/ubuntu/host-ip-local.txt"
-   
-   content=<<-EOF
-[AWS]
-${join("\n",aws_instance.jt-api-aws.*.public_ip)}
-  
-[GCP]
-   
-EOF
-
-  #End of local_file
-  }
-
 
