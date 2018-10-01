@@ -1,3 +1,10 @@
+# Task1: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
+# Task2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
+# Task2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
+# Task2-2: Copy two files from local server to the first new VM 
+
+# More: Create ELB and distribute the traffic to those VMs.
+
 provider "aws" {
   shared_credentials_file = "/home/ubuntu/.aws/credentials"
   profile                 = "default"
@@ -5,39 +12,91 @@ provider "aws" {
   region = "ca-central-1"
 }
 
-resource "aws_vpc" "j_t_vpc" {
-  cidr_block           = "172.17.0.0/16"
-  instance_tenancy     = "default"
-  enable_dns_support   = true
-  enable_dns_hostnames = true
+variable "vpc_cidr" {
+  default="172.17.0.0/16"
+  }
+
+variable "subnet_cidrs_public" {
+  # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
+  default = ["172.17.0.0/24", "172.17.1.0/24"]
+  type = "list"
+  
+  }
+
+resource "aws_vpc" "jt-vpc" {
+  cidr_block           = "${var.vpc_cidr}"
+  #instance_tenancy     = "default"
+  #enable_dns_support   = true
+ # enable_dns_hostnames = true
 
   tags {
-    Name = "J_T_VPC"
+    Name = "jt-vpc"
   }
 }
 
-resource "aws_subnet" "j_t_subnet1" {
-  vpc_id     = "${aws_vpc.j_t_vpc.id}"
-  cidr_block = "172.17.0.0/24"
+# Create an internet gateway to give our subnets access to the outside world
+resource "aws_internet_gateway" "jt-igw" {
+  vpc_id="${aws_vpc.jt-vpc.id}"
 
+  tags {   Name="jt-igw"  }
+
+}
+
+# Grant the VPC internet access on its main route table
+resource "aws_route" "jt-rt_internet" {
+  route_table_id="${aws_vpc.jt-vpc.main_route_table_id}"
+  destination_cidr_block="0.0.0.0/0"
+  gateway_id="${aws_internet_gateway.jt-igw.id}"
+  
+}
+
+# Declare the data source
+data "aws_availability_zones" "available" {}
+
+resource "aws_subnet" "jt-pub_subnet" {
+  count="${length(var.subnet_cidrs_public)}"
+  
+  vpc_id     = "${aws_vpc.jt-vpc.id}"
+  cidr_block = "${var.subnet_cidrs_public[count.index]}"
+  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  map_public_ip_on_launch = true
+  
   tags {
-    Name = "J_T_VPC_Sub1"
+    #Name = "jt-vpc_subnet"
+    Name = "${format("jt-vpc_subnet-%d", count.index + 1)}"
+  }
+  
+}
+
+# A security group for the ELB so it is accessible via the web
+resource "aws_security_group" "jt-sg_elb" {
+  name        = "jt-sg_elb"
+  description = "Elb Used in the 2Tier DEMO"
+  vpc_id      = "${aws_vpc.jt-vpc.id}"
+
+  # HTTP access from anywhere
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # outbound internet access
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-resource "aws_subnet" "j_t_subnet2" {
-  vpc_id     = "${aws_vpc.j_t_vpc.id}"
-  cidr_block = "172.17.1.0/24"
 
-  tags {
-    Name = "J_T_VPC_Sub2"
-  }
-}
-
-resource "aws_security_group" "j_t_sg_demo1" {
-  name        = "j_t_sg-demo1"
+# Our default security group to access the instances over SSH and HTTP
+resource "aws_security_group" "jt-sg_demo1" {
+  name        = "jt-sg-demo1"
   description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
-  vpc_id      = "${aws_vpc.j_t_vpc.id}"
+  vpc_id      = "${aws_vpc.jt-vpc.id}"
   
     # HTTP access from anywhere
   ingress {
@@ -73,101 +132,58 @@ resource "aws_security_group" "j_t_sg_demo1" {
   }
 }
 
-resource "aws_internet_gateway" "j_t_igw" {
-  vpc_id="${aws_vpc.j_t_vpc.id}"
+resource "aws_elb" "jt-elb" {
+  name = "jt-demo-elb"
 
-  tags {
-   Name="J_T_VPC_IGW"
-  }
+  subnets         = ["${aws_subnet.jt-pub_subnet.*.id}"]
+  security_groups = ["${aws_security_group.jt-sg_elb.id}"]
+  #availability_zones = ["${data.aws_availability_zones.available.names}"]
+  instances       = ["${aws_instance.jt-api-aws.*.id}"]
 
-}
-
-resource "aws_route_table" "j_t_public_rt_table" {
-vpc_id="${aws_vpc.j_t_vpc.id}"
-
-route {
-  cidr_block ="0.0.0.0/0"
-  gateway_id="${aws_internet_gateway.j_t_igw.id}"
-}
-
-  tags {  Lable="J_T_RT"}
-
-}
-
-
-resource "aws_route_table_association" "j_t_rt_asso" {
-  subnet_id ="${aws_subnet.j_t_subnet2.id}"
-  subnet_id ="${aws_subnet.j_t_subnet1.id}"
-  route_table_id="${aws_route_table.j_t_public_rt_table.id}"
-}
-
-
-resource "aws_instance" "j_t_API1-AWS" {
-  ami                    = "ami-0d12bbc5df9d0d8c8"
-  #ami                    = "ami-9526abf1"
-
-  instance_type          = "t2.micro"
-  key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
-  subnet_id              = "${aws_subnet.j_t_subnet1.id}"
-  
-
-  
-
-  tags = {
-    Name = "J_T_API1-AWS"
+  listener {
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
   }
 }
 
-resource "aws_eip" "j_t_eip1" {
-  vpc      = true
 
-  tags {
-    Name = "J_T_Eip1"
-  }
-}
-
-resource "aws_eip_association" "j_t_eip1_asso" {
-  instance_id="${aws_instance.j_t_API1-AWS.id}"
-  allocation_id ="${aws_eip.j_t_eip1.id}"
+resource "aws_instance" "jt-api-aws" {
+  count="${length(var.subnet_cidrs_public)}"
   
-  
-  # EIP1 association
- } 
-
-
-  
-  # EIP1 association
- } 
-
-
-resource "aws_instance" "j_t_API2-AWS" {
+  #ami                    = "ami-0d12bbc5df9d0d8c8"
   ami                    = "ami-9526abf1"
+
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
-  vpc_security_group_ids = ["${aws_security_group.j_t_sg_demo1.id}"]
-  subnet_id              = "${aws_subnet.j_t_subnet2.id}"
-
+  vpc_security_group_ids = ["${aws_security_group.jt-sg_demo1.id}"]
+  
+  subnet_id ="${element(aws_subnet.jt-pub_subnet.*.id, count.index)}"
+  #subnet_id              = "${aws_subnet.jt-subnet1.id}"
+  
   tags = {
-    Name = "J_T_API2-AWS"
+    #Name = "jt-api-aws"
+    Name = "${format("jt-api-aws-%03d", count.index + 1)}"
+  }
+}
+
+    # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
+ resource "local_file" "inventory-ip-list" {
+   filename="/home/ubuntu/host-ip-local.txt"
+   
+   content=<<-EOF
+[AWS]
+${join("\n",aws_instance.jt-api-aws.*.public_ip)}
+  
+[GCP]
+   
+   EOF
+
+  #End of local_file
   }
   
-}
-
-resource "aws_eip" "j_t_eip2" {
-  vpc      = true
-
-  tags {
-    Name = "J_T_Eip2"
-  }
-}
-
-resource "aws_eip_association" "j_t_eip2_asso" {
-  instance_id="${aws_instance.j_t_API2-AWS.id}"
-  allocation_id ="${aws_eip.j_t_eip2.id}"
-}
-
-
+ 
 resource "null_resource" "rerun" {
 # Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
   # By default, Terraform only run these non-state provisioners once if you excute apply based on already-built resource, unless you run the apply after each destroy.
@@ -177,19 +193,7 @@ resource "null_resource" "rerun" {
     rerun= "${uuid()}"
   }
 
-    # Add the new public ip (EIP1 and EIP2) to local config file
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip1.public_ip} >/home/ubuntu/host-ip-local.txt"
 
-  }
-  
-  provisioner "local-exec" {
-    command = "echo ${aws_eip.j_t_eip2.public_ip} >>/home/ubuntu/host-ip-local.txt"
- #   command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
- 
-  }
-    
-  
   provisioner "local-exec" {
   #command = "ansible-playbook -i /usr/local/bin/terraform-inventory -u ubuntu playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
   command=" echo to be test ansible "  
@@ -197,7 +201,9 @@ resource "null_resource" "rerun" {
   
 
  # Run remote provisioner on the instance after association of EIP to Instance1 and 2 on AWS.
-    
+ # Could also try this way: run below user_data line before connection section.
+  # user_data = "${file("terraform/attach_ebs.sh")}"   
+  
   # Add the ip of API3-GCP to API1-AWS config file
 
     connection {
@@ -205,14 +211,20 @@ resource "null_resource" "rerun" {
     user = "ubuntu"
     private_key = "${file("/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem")}"
     #private_key = "${file("${path.module}/keys/terraform")}"
-    host="${aws_eip.j_t_eip1.public_ip}"
+    host="${aws_instance.jt-api-aws.0.public_ip}"
   }
  
- # Bootstrape API2-AWS from a bare new AWS ami
- # Copies the myapp.conf file to /etc/myapp.conf
+ # Bootstrape the new VM from a bare new AWS ami
+ # Copies the script file to new VM
   provisioner "file" {
     source      = "/home/ubuntu/build-api1.sh"
     destination = "/home/ubuntu/build-api1.sh"
+  }
+  
+  # Copies the json config file to the API project folder in new VM, so it can connect with the Google VM
+  provisioner "file" {
+    source      = "/home/ubuntu/config.json"
+    destination = "/home/ubuntu/config.json"
   }
   
   provisioner "remote-exec" {
@@ -221,18 +233,12 @@ resource "null_resource" "rerun" {
         
       #"sh /home/ubuntu/build-api1.sh",
         # Failed running this bootstrap file, can't add startup task into crontab, so try pre-build ami way.
-        
-      "echo '{' > /home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-      "echo  '  \"api2_url\": \" http://35.231.144.74:5000\"' >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
-
-      "echo } >>/home/ubuntu/terraform/proj1/terraform-challenge/run-your-own-dojo/apis/api-1/config/config.json",
+      "echo 'Run multiple lines command here'",  
+      
      ]
   }
-  
+ 
 
-   
-
-  #resource "null_resource" "uuid-trigger
-}
-
+  #resource "null_resource" uuid-trigger
+  }
 
