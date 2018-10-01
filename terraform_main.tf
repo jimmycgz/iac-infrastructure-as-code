@@ -175,7 +175,7 @@ ${join("\n",aws_instance.jt-api-aws.*.public_ip)}
   
 [GCP]
    
-EOF
+   EOF
 
   #End of local_file
   }
