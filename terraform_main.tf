@@ -168,9 +168,9 @@ resource "aws_instance" "jt-api-aws" {
   }
 }
 
-    # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file
+    # Add the all of new public ip (like the IPs of AWS-001 and AWS-002) to local config file for ansible
  resource "local_file" "inventory-ip-list" {
-   filename="/home/ubuntu/host-ip-local.txt"
+   filename="/home/ubuntu/hosts"
    
    content=<<-EOF
 [AWS]
