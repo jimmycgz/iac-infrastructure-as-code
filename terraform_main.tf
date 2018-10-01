@@ -62,6 +62,8 @@ resource "aws_subnet" "jt-pub_subnet" {
   
   vpc_id     = "${aws_vpc.jt-vpc.id}"
   cidr_block = "${var.subnet_cidrs_public[count.index]}"
+  
+  #Pick up AZ1 and AZ2 alternatively for all subnects, because there are only 2 AZs in ca-central-1 in AWS
   availability_zone = "${element(data.aws_availability_zones.available.names, count.index)}"
     
   map_public_ip_on_launch = true
@@ -74,9 +76,9 @@ resource "aws_subnet" "jt-pub_subnet" {
 }
 
 # A security group for the ELB so it is accessible via the web
-resource "aws_security_group" "jt-sg_elb" {
-  name        = "jt-sg_elb"
-  description = "Elb Used in the 2Tier DEMO"
+resource "aws_security_group" "jt-sg-alb" {
+  name        = "jt-sg-alb"
+  description = "Alb Used in the 2Tier DEMO"
   vpc_id      = "${aws_vpc.jt-vpc.id}"
 
   # HTTP access from anywhere
@@ -100,8 +102,8 @@ resource "aws_security_group" "jt-sg_elb" {
 # Our default security group to access the instances over SSH and HTTP
 resource "aws_security_group" "jt-sg_demo1" {
   name        = "jt-sg-demo1"
-  description = "Security Group in Subnet1: allow 80/22/3000 inbound traffic and all outbound"
-  vpc_id      = "${aws_vpc.jt-alb-tg.id}"
+  description = "Security Group for each Subnets: allow 80/22/3000 inbound traffic and all outbound"
+  vpc_id      = "${aws_vpc.jt-vpc.id}"
   
     # HTTP access from anywhere
   ingress {
@@ -152,7 +154,7 @@ resource "aws_lb" "jt-alb" {
   
   #Associate the elb to the instances in the first 2 subnets
   subnets         = ["${list(aws_subnet.jt-pub_subnet.0.id, aws_subnet.jt-pub_subnet.1.id)}"]
-  security_groups = ["${aws_security_group.jt-sg_elb.id}"]
+  security_groups = ["${aws_security_group.jt-sg-alb.id}"]
   
   enable_deletion_protection = true
 
