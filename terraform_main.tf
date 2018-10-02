@@ -160,7 +160,10 @@ resource "aws_alb_target_group" "jt-alb-tg" {
 resource "aws_alb_target_group_attachment" "jt-alb-tg-attach" {
   count="${aws_instance.jt-api-aws.count}"
   target_group_arn = "${aws_alb_target_group.jt-alb-tg.arn}"
-  target_id        = "${aws_instance.jt-api-aws.[count.index].id}"
+  
+  #Attach every available instance into the target group by count.
+  target_id        = "${element(aws_instance.jt-api-aws.*.id, count.index)}"
+
   port             = 80
 }
 
@@ -203,6 +206,7 @@ resource "aws_instance" "jt-api-aws" {
   key_name               = "Jmy_Key_AWS_Apr_2018"
   vpc_security_group_ids = ["${aws_security_group.jt-sg_demo1.id}"]
   
+  #put each instance into one of the available subnets.
   subnet_id ="${element(aws_subnet.jt-pub_subnet.*.id, count.index)}"
   #subnet_id              = "${aws_subnet.jt-subnet1.id}"
   
