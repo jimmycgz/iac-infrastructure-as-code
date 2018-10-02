@@ -8,8 +8,10 @@
   #sudo ansible AWS -m ping --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
   #sudo ansible AWS -a "echo test" --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
 
-# Task 3: Create ALB and distribute the traffic to those VMs. Health check port 3000 for API instances
-   
+# Task 3 [Done]: Create ALB and distribute the traffic to those VMs. Health check port 3000 for API instances
+
+# Task 4 [To Do]: Create private subnet and associate all VMs with NAT instance hosted in the first public subnet, follow below webpage for details.
+#https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
 
 provider "aws" {
   shared_credentials_file = "/home/ubuntu/.aws/credentials"
