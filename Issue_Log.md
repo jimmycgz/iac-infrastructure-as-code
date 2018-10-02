@@ -1,4 +1,4 @@
-	# Issue Log
+# Issue Log
 	
   ## Terraform doesn't keep the state for some resources, which only run one time at beging.
   Resolution: Suessfully done this via resource "null_resource" "rerun" and use uuid as trigger , find this section at the bottom of the .tf file. Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run.
