@@ -164,7 +164,7 @@ resource "aws_alb_target_group_attachment" "jt-alb-tg-attach" {
   #Attach every available instance into the target group by count.
   target_id        = "${element(aws_instance.jt-api-aws.*.id, count.index)}"
 
-  port             = 80
+  port             = 3000
 }
 
 resource "aws_alb" "jt-alb" {
