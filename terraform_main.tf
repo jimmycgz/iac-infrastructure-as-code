@@ -158,7 +158,7 @@ resource "aws_alb_target_group" "jt-alb-tg" {
 }
 
 resource "aws_alb_target_group_attachment" "jt-alb-tg-attach" {
-  target_group_arn = "${aws_lb_target_group.jt-alb-tg.arn}"
+  target_group_arn = "${aws_alb_target_group.jt-alb-tg.arn}"
   target_id        = "${aws_instance.jt-api-aws.*.id}"
   port             = 80
 }
