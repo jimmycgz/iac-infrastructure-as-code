@@ -50,13 +50,17 @@ resource "aws_internet_gateway" "jt-igw" {
 
 }
 
-# Grant the VPC internet access on its main route table
-resource "aws_route" "jt-rt_internet" {
-  route_table_id="${aws_vpc.jt-vpc.main_route_table_id}"
-  destination_cidr_block="0.0.0.0/0"
-  gateway_id="${aws_internet_gateway.jt-igw.id}"
+#Create customer route table for subnet, instead using the default main route table
+resource "aws_route_table" "jt-rt_internet" {
+  vpc_id     = "${aws_vpc.jt-vpc.id}"
   
-}
+  route {
+    cidr_block="0.0.0.0/0"
+    gateway_id="${aws_internet_gateway.jt-igw.id}"
+    
+    }
+  }
+    
 
 # Declare the data source
 data "aws_availability_zones" "available" {}
@@ -77,6 +81,16 @@ resource "aws_subnet" "jt-pub_subnet" {
   
 }
 
+resource "aws_route_table_association" "jt-rt-association" {
+   count="${length(var.subnet_cidrs_public)}"
+  
+   #associate all of available subnets to the customer route table
+   subnet_id ="${element(aws_subnet.jt-pub_subnet.*.id, count.index)}"
+  route_table_id = "${aws_route_table.jt-rt_internet.id}"
+  
+  }
+  
+  
 # A security group for the ELB so it is accessible via the web
 resource "aws_security_group" "jt-sg-alb" {
   name        = "jt-sg-alb"
