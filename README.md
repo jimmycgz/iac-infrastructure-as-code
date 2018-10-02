@@ -1,5 +1,5 @@
 # Infrastructure as Code  
-## My Collections using Terraform, Ansible, Chef and Linux scripting
+My Collections using Terraform, Ansible, Chef and Linux scripting
 
 
 # Use Terraform to setup API workload infra in AWS:
@@ -38,32 +38,14 @@
   
   * Step 4> [WIP] Deploy API2-AWS and API3-GCP instance and connect with API1-AWS
   
-   ** Step 4.1> [DONE! Sep26] Manually installed httpd web service in API2GCP on GCP and connect it with API1-AWS on AWS Tool Server: http://35.231.144.74:5000/  manually added this ip to the config.json in API1-AWS (AWS Subnet1) so they both are connected.
+   ** Step 4.1> [DONE! Sep28] Manually installed httpd web service in API3GCP on GCP and connect it with API-AWS-Tool on AWS Tool Server. Used Terraform Remote-exec to automaticaly update the ip address of API3-GCP into the config.json in API-AWS-001 (AWS Subnet1) 
    
-   ** Step 4.2> [DONE! Sep28] User Terraform Remote-exec to automaticaly update the ip address of API3-GCP into the config.json in API1-AWS (AWS Subnet1) 
-   
-   Suessfully done this via resource "null_resource" "rerun" and use uuid as trigger , find this section at the bottom of the .tf file
-   
- Use uuid as trigger so Terraform will run the non-state provisioner (like file, local-exec and remote-exec) in this group for each run
+
+  ** Step 4.2 [DONE! Sep 30] Further refine Terraform code, use count, index, local_exec, local_file, remote_exec with SSH connection, AWS-ELB with multiple AZs (Detailed task items are listed in the top of Terraform.tf)
   
-  Issue found: remote-exec creates file on the terraform host if I run it in instance resource or eip resource
+  ** Step 4.3 [WIP] Use Ansible for Configuration Management, the all public IPs are updated in a host file by Step 4.4
   
-  Resolution: run it in "null_resource" and use uuid as trigger.
-  
-  Issue found: can't bootstrap by neither remote-exec or run a .sh file in the new instance.
-  
-  Resolution: Step 4.3> [DONE!] Use my own AMI with the API pre-configured, then user Terraform remote-exec to update the ip address of API3-GCP into the Json config file of API1-AWS.
-  
-  Issue found: how to add a quate (") to a txt file by echo in Terraform? like  command="echo "IP_add=": >IP.txt",
-  Resolution: use the combination of (\") and (') like command="echo ' \"IP_add=\":' >IP.txt",
-  
-  Issue found: Can't associate one IGW to multiple subnets, Terraform seems only associate it to the last one in resource IGW_asso
-  
-  ** Step 4.4 [DONE! Sep 30] Further refine Terraform code, use count, index, local_exec, local_file, remote_exec with SSH connection, AWS-ELB with multiple AZs (Detailed task items are listed in the top of Terraform.tf)
-  
-  ** Step 4.5 [WIP] Use Ansible for Configuration Management, the all public IPs are updated in a host file by Step 4.4
-  
-  ** Step [WIP] 4.x Rename API2 (GCP) to API3-GCP, correc the display name in API-AWS code.
+  ** Step [DONE! Oct 1st] 4.x Rename API2 (GCP) to API3-GCP, correc the display name in API-AWS code.
     Sep 29th: have created 3 folders in Repo API-DEMO, just need to futher tailor the code accordingly. And then try ansible as Step 4.5 after resolving the above issue to associate IGW to Subnet 2.
   
   
@@ -86,15 +68,17 @@
    https://github.com/OSSCanada/portal-and-cloudshell/blob/master/main.tf
    
   
- Ansible Script for Pull Deployment
+ # Ansible Script for Configuration Management 
+ 
+ ## Pull/Push Deployment
+ 
+ Assume the file hosts has the updated host ip list from Terraform
+  
+     *sudo ansible-playbook ansible-web.yml --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem
  
      *sudo ansible AWS -a "echo test" --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
 
- Assume the file hosts has the updated host ip list from Terraform
-  
-      *sudo ansible-playbook ansible-web.yml --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem
-
- -i specifies the ip host file, no need to use -u if already specified the login user name in yml
+ Use -i specifies the ip host file, no need to use -u if already specified the login user name in yml
  
     *ansible-playbook -i /usr/local/bin/terraform-inventory playbook.yml --private-key=/home/user/.ssh/aws_user.pem -u ubuntu
 
@@ -104,7 +88,7 @@ Reboot each instance via ansible playbook to auto deploy by this script. All ins
 
 crontab –e 
 
-/# Restart the tool server if you meet error like: "error 12: out of memory".
+
 /# can also try to create a tag file using below ansible command and setup linux to check this file every 10mins, run deployment and delete this file. 
 
     *ansible gcp_web_prod -a "echo hello >/home/jimmycgz/deploy_start.txt"
