@@ -57,6 +57,7 @@ resource "aws_route_table" "jt-rt_internet" {
     gateway_id="${aws_internet_gateway.jt-igw.id}"
     
     }
+  }
     
 
 # Declare the data source
