@@ -1,5 +1,7 @@
 # Task 1: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
-# Task 2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
+# Task 2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated public IPs. (line 25 in variable subnet_cidrs_public)
+# Issue: The VMs seem can't access internet showing "time out", may need to further refine the route table and IGW config.
+
 # Task 2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
 # Task 2-2: Copy two files from local server to the first new VM 
 # Task 2-3: Save the Public IPs of all new VMs to file: hosts (AWS Group) for ansible
