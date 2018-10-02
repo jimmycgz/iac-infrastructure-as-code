@@ -45,7 +45,8 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
   ** Step 4.3 [DONE! Oct 1st] Have created 3 folders in my own Repo API-DEMO, tailered the code showing corret naming for 3 instances. All new public IPs are updated in a host file for further usage via Ansible.
   
   
-  
+ ## Further Steps:
+ 
  * Further Step > [WIP] Use Ansible for Configuration Management to deploy API web service for API-AWS-001, API-AWS-002 and connect to API3-GCP.
   
 * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
