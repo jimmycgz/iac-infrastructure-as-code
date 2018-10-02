@@ -1,5 +1,5 @@
 # Task 1: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
-# Task 2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated public IPs. (line 25 in variable subnet_cidrs_public)
+# Task 2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated public IPs. (list of subnets are defined by CIDRs in viable subnet_cidrs_public)
 # Issue: The VMs seem can't access internet showing "time out", may need to further refine the route table and IGW config.
 
 # Task 2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
@@ -10,7 +10,9 @@
 
 # Task 3 [Done]: Create ALB and distribute the traffic to those VMs. Health check port 3000 for API instances
 
-# Task 4 [To Do]: Create private subnet and associate all VMs with NAT instance hosted in the first public subnet, follow below webpage for details.
+# Task 4 [To Do]: Use ansible to deploy httpd webservice by bootstrap in user data via terraform.
+
+# Further Task  [To Do]: Create private subnet and associate all VMs with NAT instance hosted in the first public subnet, follow below webpage for details.
 #https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
 
 provider "aws" {
