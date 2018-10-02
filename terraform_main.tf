@@ -1,13 +1,13 @@
-# Task1: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
-# Task2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
-# Task2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
-# Task2-2: Copy two files from local server to the first new VM 
-# Task2-3: Save the Public IPs of all new VMs to hosts for ansible
+# Task 1: Use count and index create 2 subnets in two AZs,  2 VMs on each subnet with associated public IPs.
+# Task 2-0: Extend the subnet cidr list from 2 to n, then create n VMs on each subnet with associated n eips. (line 18 in variable subnet_cidrs_public)
+# Task 2-1: Add the public ip of all new VMs into a local inventory file where Terraform runs(AWS Tools Server, or local server)
+# Task 2-2: Copy two files from local server to the first new VM 
+# Task 2-3: Save the Public IPs of all new VMs to file: hosts (AWS Group) for ansible
   #sudo ansible AWS -m ping --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
   #sudo ansible AWS -a "echo test" --private-key=/home/ubuntu/.ssh/Jmy_Key_AWS_Apr_2018.pem -u ubuntu
 
-
-# More: Create ELB and distribute the traffic to those VMs.
+# Task 3: Create ALB and distribute the traffic to those VMs. Health check port 3000 for API instances
+   
 
 provider "aws" {
   shared_credentials_file = "/home/ubuntu/.aws/credentials"
@@ -66,8 +66,6 @@ resource "aws_subnet" "jt-pub_subnet" {
   #Pick up AZ1 and AZ2 alternatively for all subnects, because there are only 2 AZs in ca-central-1 in AWS
   availability_zone = "${element(data.aws_availability_zones.available.names, count.index)}"
     
-  map_public_ip_on_launch = true
-  
   tags {
     #Name = "jt-vpc_subnet"
     Name = "${format("jt-vpc_subnet-%d", count.index+1)}"
@@ -174,7 +172,7 @@ resource "aws_alb" "jt-alb" {
   
   #Associate the elb to the instances in the first 2 subnets
   subnets         = ["${list(aws_subnet.jt-pub_subnet.0.id, aws_subnet.jt-pub_subnet.1.id)}"]
-  security_groups = ["${aws_security_group.jt-sg-alb.id}"]
+  security_groups = ["${aws_security_group.jt-sg-alb.id}"] 
   
   enable_deletion_protection = false
 
@@ -208,7 +206,7 @@ resource "aws_instance" "jt-api-aws" {
   
   #put each instance into one of the available subnets.
   subnet_id ="${element(aws_subnet.jt-pub_subnet.*.id, count.index)}"
-  #subnet_id              = "${aws_subnet.jt-subnet1.id}"
+  associate_public_ip_address = true
   
   tags = {
     #Name = "jt-api-aws"
