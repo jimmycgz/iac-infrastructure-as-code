@@ -50,6 +50,8 @@ https://github.com/terraform-providers/terraform-provider-aws/tree/master/exampl
  ## Further Steps:
  
  * Further Step > [WIP] Use Ansible for Configuration Management to deploy API web service from new AMI for API-AWS-001, API-AWS-002 and connect to API3-GCP.
+ Refer to https://github.com/jimmycgz/terraform-ansible-example
+ 
   
  * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file.
     
@@ -60,6 +62,7 @@ https://github.com/terraform-providers/terraform-provider-aws/tree/master/exampl
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
  * Further Step > [To Do] Deploy to Docker by Terraform, and probably have to use AWS ECS with load balancing
+ Refer to another Repo: docker https://github.com/jimmycgz/docker
  
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
