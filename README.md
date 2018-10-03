@@ -29,13 +29,13 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
   Refer to this webpage for Route table and IGW: https://040code.github.io/2017/06/18/terraform-aws-vpc/
 
   
-  * Step 2> [DONE!]provision 2 VMs, API1-AWS using my own AMI with pre-configured API workload, API2-AWS use AWS AMI need further setup workload using Apache httpd.
+  * Step 2> [DONE!]provision 2 VMs, API-AWS-001 & API-AWS-002, using my own AMI with pre-configured API code.
   
   * Step 3> [DONE!]Run Terraform via Jenkins Pipeline
 
-  https://github.com/david-wells-1/jenkins-terraform-pipeline
+   Refer to https://github.com/david-wells-1/jenkins-terraform-pipeline
   
-  * Step 4> [DONE! Oct 1st] Deploy API-AWS-001 with ALB API-AWS-002, connect to API3-GCP instance
+  * Step 4> [DONE! Oct 1st] Deploy ALB with API-AWS-001 & API-AWS-002, connect to API3-GCP instance
   
    ** Step 4.1 [DONE! Sep28] Manually installed httpd web service in API3GCP on GCP and connect it with API-AWS-Tool on AWS Tool Server. Used Terraform Remote-exec to automaticaly update the ip address of API3-GCP into the config.json in API-AWS-001 (AWS Subnet1) 
 
@@ -48,9 +48,8 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
  
  * Further Step > [WIP] Use Ansible for Configuration Management to deploy API web service for API-AWS-001, API-AWS-002 and connect to API3-GCP.
   
-* Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
-  
-  
+ * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
+    
  * Further Step > [To Do] Run Chef local mode through Terraform
   
   Need to figure out how to use Chef client mode to manage a new node created by Terraform
