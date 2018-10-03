@@ -1,20 +1,19 @@
 # Infrastructure as Code  
 My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file Issue_log for issue details and resolutions.
 
-
 # Use Terraform to setup API workload infra in AWS:
-
 
  ## Details to set up:
 
-* A VPC
-* Two subnets
+* One VPC
+* Two subnets in 2 AZs
 * An internet gateway
-* A security group
+* One security group for VMs, another one for ALB
 * Using existing SSH key pair
-* Two EC2 instances, API1-AWS on Subnet1, API2-AWS on Subnet2
-* Within the instance:
-   Sample API code written by Node.JS
+* Two EC2 instances, API-AWS-001 on Subnet1, API-AWS-002 on Subnet2
+* Deploy the tailered API code written by Node.JS
+* ALB associates with the 2 AWS VMs
+* Update hosts file for Ansible for ongoing Configuration Management
 
 ## Setup Steps:
   * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
@@ -84,13 +83,10 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
 
 Reboot each instance via ansible playbook to auto deploy by this script. All instances are pre-configured startup script to pull the latest release code from a registry say AWS S3 bucket or ECR. Such startup script can be configured in Linux CLI: 
 
-crontab –e 
+     crontab –e 
 
 
-/# can also try to create a tag file using below ansible command and setup linux to check this file every 10mins, run deployment and delete this file. 
-
-    ansible gcp_web_prod -a "echo hello >/home/jimmycgz/deploy_start.txt"
-    ansible host -m shell -a 'echo hello && echo world'
+/# can also try to create a tag file using ansible and setup linux task to check this file every 10mins, run deployment and delete this file. 
 
     sh $HOME/ansi_deploy.sh
 
@@ -99,7 +95,7 @@ crontab –e
 
 ## Chef Recipe to build hello word web service
 
-package 'httpd'
+    package 'httpd'
 
     file '/var/www/html/index.html' do
 
@@ -116,23 +112,23 @@ package 'httpd'
 # Linux Script for Configuration Management
     for host in $(cat hosts.txt); do ssh "$host" "sudo reboot"; done
 
-#!/usr/bin/env bash
+    #!/usr/bin/env bash
 
-#Deploy to all pinable Product Web Instance(s) Ubuntu .
+    #Deploy to all pinable Product Web Instance(s) Ubuntu .
 
-#AWS subnet1 and subnet2 10.0.1.x 10.0.2.x
+    #AWS subnet1 and subnet2 10.0.1.x 10.0.2.x
 
-#GCP subnet 
+    #GCP subnet 
 
-#Azure subnet
+    #Azure subnet
 
-#Generate a hosts.txt file collecting all pinable IP in one Prod subnet
+    #Generate a hosts.txt file collecting all pinable IP in one Prod subnet
 
     echo "Generating a hosts.txt file collecting all pinable IPs in one Subnet"
-note: all instances need to open ICMP port to be able to use ping.
+
+    Note: all instances need to open ICMP port to be able to use ping.
 
     seq 254 | xargs -iIP -P255 ping -c1 10.0.1.IP |gawk -F'[ :]' '/time=/{print $4}'  >hosts.txt
-
     seq 254 | xargs -iIP -P255 ping -c1 10.0.2.IP |gawk -F'[ :]' '/time=/{print $4}'  >>hosts.txt
 
     echo "Run Deploy script file in a loop for all pinable instances"
