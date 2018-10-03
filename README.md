@@ -46,9 +46,9 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
   
  ## Further Steps:
  
- * Further Step > [WIP] Use Ansible for Configuration Management to deploy API web service for API-AWS-001, API-AWS-002 and connect to API3-GCP.
+ * Further Step > [WIP] Use Ansible for Configuration Management to deploy API web service from new AMI for API-AWS-001, API-AWS-002 and connect to API3-GCP.
   
- * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file. or use File provisioner.
+ * Further Step > [To Do] try use Terraform template .tpl to update the ip into the config file.
     
  * Further Step > [To Do] Run Chef local mode through Terraform
   
@@ -56,13 +56,14 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
     
   https://github.com/mjuuso/provisioning_example/blob/master/resources.tf
   
- * Further Step > [To Do]Deploy to Docker by Terraform
+ * Further Step > [To Do] Deploy to Docker by Terraform, and probably have to use AWS ECS with load balancing
  
   https://github.com/hashicorp/docker-hub-images/tree/master/terraform
   
  * Further Step > [To Do]Deploy to Azure container by Terraform
    https://github.com/OSSCanada/portal-and-cloudshell/blob/master/main.tf
    
+ * Further Step > [To Do] Deploy to EKS AKS K8S (Kubernetes)
   
  # Ansible Script for Configuration Management 
  
