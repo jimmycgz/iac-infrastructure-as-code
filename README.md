@@ -134,7 +134,7 @@ Reboot each instance via ansible playbook to auto deploy by this script. All ins
     echo "Run Deploy script file in a loop for all pinable instances"
 
 
-## Run Push script in Jenkins
+## Run Linux script in Jenkins for Push/Pull Deployment
     for host in $(cat hosts.txt); do sudo ssh -i /home/ubuntu/.ssh/My_2018.pem ubuntu@$host "sh /home/ubuntu/Deploy_Prod.sh"; done  |true
 
 
