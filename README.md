@@ -15,6 +15,9 @@ My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file
 * ALB associates with the 2 AWS VMs
 * Update hosts file for Ansible for ongoing Configuration Management
 
+More Terraform examples are available at its official GitHub Repo:
+https://github.com/terraform-providers/terraform-provider-aws/tree/master/examples
+
 ## Setup Steps:
   * Step 1> [DONE!] create 1 VPC, 2 subnets and Security Group
   
