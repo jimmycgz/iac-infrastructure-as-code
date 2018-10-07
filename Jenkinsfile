@@ -1,5 +1,6 @@
 pipeline {
-    /*  Used Dev branch to further develop the code for IaC */
+    /*  Jenkinsfile */
+    /* Used Dev branch to further develop the code for IaC */
     /*  Get Terraform resource file by checking out SCM*/
     /* Create Security Group by Terraform resource file */
     
