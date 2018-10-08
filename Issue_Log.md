@@ -14,3 +14,9 @@
   
   ## Meet error like: "error 12: out of memory" when running Ansible
   Resolution: Restart the tool server and try again. 
+
+  ## time out when trying to access interview from the VM in public subnet
+  Resolution: the 10G space is running out. Internet access become normal after deleting some folder and files with below steps:
+  
+          sudo du -a |sort -n -r |head -n -10
+	  sudo rm -rf foldername
