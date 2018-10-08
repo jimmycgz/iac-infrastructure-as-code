@@ -2,6 +2,18 @@
 My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file Issue_log for issue details and resolutions.
 
 # Use Terraform to setup API workload infra in AWS:
+This repo uses multiple higher level of terraform functions and provisioners more effectively building Cloud infrastructure, like:
+* Count  : create multiple resources
+* Index : pointer to refer to the right resources created by count
+* Element: map each item from a list to another list, wrap if beyond the index count
+* List: create a list variable
+* Join: combine multiple items into one item
+* Format: format the string or naming conversion
+* Local file: create a file by EOF couple in local host
+* Local exec: run CLI in local host
+* Remote exec: run CLI in remote instance just created by terraform
+* null resource with uuid to manage unstateful functions
+
 
  ## Details to set up:
 
