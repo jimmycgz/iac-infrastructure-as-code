@@ -216,9 +216,9 @@ resource "aws_alb_listener" "jt-listener-http" {
 resource "aws_instance" "jt-api-aws" {
   count="${length(var.subnet_cidrs_public)}"
   
-  ami                    = "ami-027a232ded044efa6"
+  #ami                    = "ami-027a232ded044efa6"
   # Baked from V4 tool server, has refined API1 service connected with API3-GCP on port 3000, also has DEMO web on 80, auto-launch demo web at reboot by a tailered Deploy_Prod.sh on home/ubuntu
-  #ami                    = "ami-9526abf1"
+  ami                    = "ami-9526abf1"
 
   instance_type          = "t2.micro"
   key_name               = "Jmy_Key_AWS_Apr_2018"
