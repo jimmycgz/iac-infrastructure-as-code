@@ -15,7 +15,7 @@ This repo uses multiple higher level of terraform functions and provisioners mor
 * null resource with uuid to manage unstateful functions
 
 
- ## Details to set up:
+ ## Resources to buil by Terraform:
 
 * One VPC
 * Two subnets in 2 AZs
