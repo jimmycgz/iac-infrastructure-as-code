@@ -7,7 +7,7 @@ pipeline {
     agent any
 
 environment {
-        TERRAFORM_CMD = 'sudo terraform'
+        TERRAFORM_CMD = 'terraform'
     }
     stages {
     
@@ -32,7 +32,7 @@ environment {
         stage('APPLY') {
             steps {
                 sh  """
-                    ${TERRAFORM_CMD} apply -lock=false -auto-approve
+                    ${TERRAFORM_CMD} apply -lock=true -auto-approve
                                  
                     """
                   }
