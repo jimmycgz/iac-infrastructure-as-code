@@ -1,6 +1,9 @@
 # Infrastructure as Code  
 My Collections using Terraform, Ansible, Chef and Linux scripting. Refer to file Issue_log for issue details and resolutions.
 
+# Issue Log
+See details at Issue_Log.md including the defect of non-state resources like local-exec
+
 # Use Terraform to setup API workload infra in AWS:
 This repo uses multiple higher level of terraform functions and provisioners more effectively building Cloud infrastructure, like:
 * Count  : create multiple resources
